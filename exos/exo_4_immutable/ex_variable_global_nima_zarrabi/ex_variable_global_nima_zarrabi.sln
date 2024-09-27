@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ex_variable_global_nima_zarrabi", "ex_variable_global_nima_zarrabi.csproj", "{97682809-4FEA-48D5-947E-EF52F2454DE0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{97682809-4FEA-48D5-947E-EF52F2454DE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97682809-4FEA-48D5-947E-EF52F2454DE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97682809-4FEA-48D5-947E-EF52F2454DE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97682809-4FEA-48D5-947E-EF52F2454DE0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EFC9CE23-6145-4DA3-AE05-C3CC3FCF3E3E}
+	EndGlobalSection
+EndGlobal

@@ -15,18 +15,6 @@ namespace ex_immutable_nima_zarrabi
         {
             _name = name;
             _age = age;
-            if (Program.elder != null)
-            {
-                if (age >= Program.elder.Age)
-                {
-                    Program.elder = this;
-                }
-            }
-            else
-            {
-                Program.elder = this;
-            }
-
         }
 
         public string Name => _name;

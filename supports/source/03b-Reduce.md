@@ -2,7 +2,7 @@
 
 ![alt text](pile.jpg)
 
-Cet aspect a déjà été aperçu avec les fonctions `Sum` et `Average` utilisées pour [l'exercice Epsilon](../../exos/filter1/README.md#partie-2-epsilon).
+Cet aspect a déjà été aperçu avec les fonctions `Sum` et `Average` utilisées pour [l'exercice Epsilon](../../exos/words/README.md#partie-2--epsilon).
 
 Voici un exemple basique pour calculer une somme et une moyenne:
 

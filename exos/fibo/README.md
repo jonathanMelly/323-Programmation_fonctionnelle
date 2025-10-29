@@ -100,30 +100,30 @@ On remarque que `F(3)` est calculé 2 fois, `F(2)` est calculé 3 fois, et `F(1)
 Au lieu de recalculer les valeurs, on peut **transporter** les deux valeurs précédentes à chaque appel récursif :
 
 ```
-FibonacciOptimise(n, precedent/*n-1*/, actuel/*n*/)
+FibonacciOptimise(iteration, precedent, actuel)
 ```
 
 **Principe** :
 - On initialise avec `precedent = 0` et `actuel = 1` (les deux premiers termes)
 - À chaque appel récursif, on "avance" d'un cran : le nouveau précédent devient l'actuel, et le nouveau actuel devient la somme
-- On décrémente n jusqu'à atteindre 0
+- On décrémente iteration jusqu'à atteindre 0
 
 #### Mission
 
-Implémenter une méthode `FibonacciOptimise(int n, int precedent = 0, int actuel = 1)` qui utilise cette approche.
+Implémenter une méthode `FibonacciOptimise(int iteration, int precedent = 0, int actuel = 1)` qui utilise cette approche.
 
 **Indices** :
-1. Les cas de base changent : que retournez-vous si `n == 0` ? Et si `n == 1` ?
+1. Les cas de base changent : que retourner si `iteration == 0` ? Et si `iteration == 1` ?
 2. Pour le cas récursif, appeler la fonction avec :
-   - `n - 1`
+   - `iteration - 1`
    - `actuel` (devient le nouveau précédent)
    - `precedent + actuel` (devient le nouveau actuel)
 
 ### Test de performance
 
 Comparer les deux versions :
-- Mesurez le temps pour calculer `Fibonacci(35)` avec la version naïve
-- Mesurez le temps pour calculer `Fibonacci(35)` avec la version optimisée
+- Mesurer le temps pour calculer `Fibonacci(35)` avec la version naïve
+- Mesurer le temps pour calculer `Fibonacci(35)` avec la version optimisée
 - Essayer `FibonacciOptimise(10000)`
 
 > Utiliser `System.Diagnostics.Stopwatch` pour mesurer le temps d'exécution.

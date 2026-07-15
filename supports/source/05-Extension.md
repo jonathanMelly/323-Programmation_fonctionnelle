@@ -64,7 +64,7 @@ Utilisation :
 Quand une méthode d'extension retourne un élément, cela permet de faire du chaînage.
 Avec la méthode suivante :
 
-```charp
+```csharp
     /// <summary>
     /// Passe en minuscule les éléments fournis, éventuellement de manière aléatoire
     /// </summary>
@@ -148,8 +148,70 @@ public void TestDifferentNumber()
 > Sans connaître le langage Cosmos, on comprend que ce teste vérifie la différence entre deux valeurs...
 > Derrière les décors, IsDifferentThan convertit cela en langage Cosmos...
 
+## Composition de Fonctions (f ∘ g)
+
+La **composition de fonctions** est l'un des principes fondamentaux de la programmation
+fonctionnelle. L'idée est simple : la sortie d'une fonction devient l'entrée de la suivante.
+
+En mathématiques : `(f ∘ g)(x) = f(g(x))`
+
+En C# avec méthodes d'extension : `x.g().f()` — c'est la même chose.
+
+```csharp
+// Sans composition
+var result = ToUpperCase(RemoveSpaces(Trim(input)));
+
+// Avec extensions — même chose, lecture de gauche à droite
+var result = input.Trim().RemoveSpaces().ToUpperCase();
+```
+
+### Le contrat de la composition
+
+Pour que le chaînage soit possible, chaque méthode doit **retourner le même type qu'elle
+reçoit** (ou un type compatible). C'est le contrat que LINQ respecte :
+
+```csharp
+// IEnumerable<T> → Where → IEnumerable<T> → Select → IEnumerable<T> → OrderBy → ...
+numbers
+    .Where(n => n > 0)          // IEnumerable<int>
+    .Select(n => n * 2)         // IEnumerable<int>
+    .OrderBy(n => n)            // IOrderedEnumerable<int> (compatible)
+    .Take(3)                    // IEnumerable<int>
+    .ToList();                  // List<int> — matérialisation
+```
+
+### Composition explicite avec `Func`
+
+On peut composer des fonctions manuellement avec `Func` :
+
+```csharp
+// Deux fonctions à composer
+Func<string, string> trim    = s => s.Trim();
+Func<string, string> toLower = s => s.ToLower();
+
+// Composition manuelle
+Func<string, string> normalize = s => toLower(trim(s));
+
+// En méthode d'extension générique
+public static Func<A, C> Compose<A, B, C>(this Func<A, B> f, Func<B, C> g)
+    => x => g(f(x));
+
+// Utilisation
+Func<string, string> normalize2 = trim.Compose(toLower);
+Console.WriteLine(normalize2("  HELLO  ")); // "hello"
+```
+
+### Pourquoi la composition est-elle liée à l'immutabilité ?
+
+La composition fonctionnelle n'est possible *que* parce que les fonctions ne modifient
+pas leur entrée. Si `Filter` modifiait la liste source au lieu de retourner une nouvelle
+liste, `Transform(Filter(data))` serait imprévisible — `data` aurait été altéré.
+
+> L'immutabilité, la pureté et la composition forment un triangle indissociable :
+> chacun rend les deux autres possibles et utiles.
+
 ## Conclusion ⚖
-Les extensions du langage sont une bonne manière d'accélérer le développement en enrichissant 
+Les extensions du langage sont une bonne manière d'accélérer le développement en enrichissant
 le langage de base avec ce qu'on a besoin de manière répétitive... Bien entendu, cela implique
 d'avoir une dépendance supplémentaire vers ces extensions et cet aspect doit être pris en compte
 dans la balance au moment de choisir de les utiliser ou pas...

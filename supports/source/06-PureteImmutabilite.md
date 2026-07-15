@@ -22,6 +22,36 @@ Par exemple, la fonction `x => x * 2` est pure, car si on lui donne 3 en entrée
 ![](./impure%20function.png)
 Les fonctions pures sont importantes car elles facilitent le débogage et les tests : il suffit de vérifier l'entrée et la sortie, sans se soucier des changements cachés. De plus, elles permettent d'écrire un code plus sûr et prévisible, car les développeurs peuvent être certains que l'exécution de ces fonctions n'affectera pas d'autres parties du programme.
 
+### Transparence référentielle
+
+Une fonction pure est **référentiellement transparente** : on peut remplacer n'importe quel appel
+par sa valeur de retour sans changer le comportement du programme.
+
+```csharp
+// KDA = (Kills + Assists) / Deaths — mesure d'efficacité dans les jeux compétitifs
+// Pure : mêmes entrées → même sortie, rien de modifié ailleurs
+double KDA(int kills, int deaths, int assists)
+    => (kills + assists) / (double)(deaths == 0 ? 1 : deaths);
+
+// Impure : résultat différent à chaque appel (non-déterministe)
+double KDAWithNoise(int kills, int deaths, int assists)
+    => KDA(kills, deaths, assists) * Random.Shared.NextDouble();
+
+// Impure : modifie un état externe (effet de bord)
+int _callCount = 0;
+double KDATracked(int kills, int deaths, int assists)
+{
+    _callCount++; // Effet de bord — modifie l'état global
+    return KDA(kills, deaths, assists);
+}
+```
+
+### Pourquoi la pureté est précieuse
+
+- **Testable** : pas besoin de mock ni d'état à préparer — appel direct, résultat prévisible
+- **Composable** : si `f` et `g` sont pures, `f(g(x))` l'est aussi — composition sûre garantie
+- **Parallélisable** : sans état partagé, pas de race conditions possibles
+
 ### Cas concret : le cache
 Si une fonction est pure, cela veut dire qu’avec le même *input*, elle donne toujours le même *output*.
 

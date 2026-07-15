@@ -114,6 +114,97 @@ const wordsStartingWithA = words.filter(w => w.startsWith("a"));
 console.log(wordsStartingWithA); // ["abc"]
 ```
 
+## Évaluation Paresseuse (Deferred Execution)
+
+L'une des caractéristiques les plus importantes de LINQ — et de la programmation fonctionnelle
+en général — est l'**évaluation paresseuse** (ou *deferred execution*).
+
+### Qu'est-ce que c'est ?
+
+Quand tu écris `numbers.Where(n => n > 5)`, LINQ ne filtre *pas* les données à cet instant.
+Il *décrit* ce qu'il faudra faire, et reporte l'exécution au moment où les données sont
+réellement demandées.
+
+```csharp
+List<int> numbers = new() { 1, 2, 3, 4, 5 };
+
+var query = numbers.Where(n => n > 2); // Rien n'est filtré — juste une description
+
+numbers.Add(10);     // Modification de la source APRÈS construction de la query
+numbers.Add(15);
+
+var result = query.ToList(); // Exécution ICI — 3, 4, 5, 10, 15 (les nouveaux sont inclus !)
+```
+
+> Le pipeline n'est *exécuté* que quand on **matérialise** le résultat :
+> `ToList()`, `ToArray()`, `Count()`, `First()`, une boucle `foreach`, etc.
+
+### Comment savoir si une opération est paresseuse ?
+
+En règle générale :
+- **Paresseux** (retourne `IEnumerable<T>`) : `Where`, `Select`, `OrderBy`, `GroupBy`, `Skip`, `Take`...
+- **Immédiat** (force l'exécution) : `ToList()`, `ToArray()`, `Count()`, `Sum()`, `First()`, `Any()`...
+
+```csharp
+// Ceci ne fait RIEN (pipeline paresseux, rien ne consomme le résultat)
+numbers.Where(n => n > 2).Select(n => n * 2);
+
+// Ceci exécute le pipeline
+var result = numbers.Where(n => n > 2).Select(n => n * 2).ToList();
+```
+
+### Interaction avec les closures
+
+La combinaison évaluation paresseuse + closures peut produire des résultats inattendus :
+
+```csharp
+int threshold = 5;
+var query = numbers.Where(n => n > threshold); // Capture threshold par référence
+
+threshold = 1; // Modification APRÈS construction de la query
+
+var result = query.ToList(); // Exécution — utilise threshold=1, pas threshold=5 !
+// Résultat : tous les nombres > 1 (pas > 5 comme on aurait pu le croire)
+```
+
+> Ce comportement n'est pas un bug — c'est la conséquence logique de deux mécanismes
+> cohérents. La comprendre évite des heures de débogage.
+
+## `Any` et `All` — Prédicats HOF Booléens
+
+`Any` et `All` sont des **fonctions d'ordre supérieur sur des booléens** — des agrégateurs
+qui réduisent une collection à un seul booléen selon un prédicat.
+
+```csharp
+List<int> numbers = new() { 1, 2, 3, 4, 5 };
+
+// Any : y a-t-il AU MOINS UN élément qui satisfait le prédicat ?
+bool hasEven  = numbers.Any(n => n % 2 == 0);   // true — il y a 2 et 4
+bool hasNeg   = numbers.Any(n => n < 0);          // false
+
+// All : TOUS les éléments satisfont-ils le prédicat ?
+bool allPos   = numbers.All(n => n > 0);           // true
+bool allEven  = numbers.All(n => n % 2 == 0);      // false
+
+// Any sans prédicat : la collection est-elle non vide ?
+bool notEmpty = numbers.Any();                      // true
+```
+
+### Any et All comme cas particuliers de Fold
+
+`Any` et `All` sont en réalité des `Aggregate` (Fold) sur des booléens :
+
+```csharp
+// Any(pred) = Fold avec ||
+bool anyEven = numbers.Aggregate(false, (acc, n) => acc || n % 2 == 0);
+
+// All(pred) = Fold avec &&
+bool allPositive = numbers.Aggregate(true, (acc, n) => acc && n > 0);
+```
+
+> Cette équivalence révèle que `Any`, `All`, `Sum`, `Count`, `Max` ne sont pas des
+> opérations "spéciales" — ce sont toutes des instanciations du même Fold universel.
+
 # Conclusion
 
 La fonction filter est un concept important en programmation qui permet de sélectionner des éléments d'une collection en fonction d'une condition spécifique. Les exemples ci-dessus montrent comment utiliser la fonction filter en C# (et en javascript) pour filtrer des données.

@@ -137,3 +137,32 @@ List<Person> people;
 Person toto = people.Where(p => p.Id == 712).First();
 ```
 Si vous en doutez, essayez [ceci](../../assets/SearchSpeed/)...
+
+## Composition de pipelines
+
+Enchaîner `Where` et `Select` revient à composer des fonctions : `f(g(x))` en maths devient `x.g().f()` en LINQ.
+
+```csharp
+// Pipeline composé : chaque étape retourne le même type
+temperatures
+    .Where(t => t > -50)       // Filter — retourne IEnumerable<double>
+    .Select(t => t + 273.15)   // Map (Celsius → Kelvin) — retourne IEnumerable<double>
+    .Where(k => k < 400)       // Filter encore
+```
+
+> La composition est possible *uniquement* parce que chaque méthode retourne une **nouvelle**
+> valeur au lieu de modifier la source. L'immutabilité rend la composition possible.
+
+### Closures dans les transformations
+
+Dans `.Select(t => t + offset)`, si `offset` est une variable du scope parent, c'est une closure.
+La même règle que pour `Where` s'applique : la valeur capturée est lue au moment de l'*exécution*
+du pipeline, pas au moment de sa construction.
+
+```csharp
+double factor = 2.0;
+var doubled = numbers.Select(n => n * factor); // closure sur factor
+
+factor = 3.0;
+var result = doubled.ToList(); // exécution ici — utilise factor=3.0, pas 2.0 !
+```

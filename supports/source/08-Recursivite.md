@@ -42,6 +42,45 @@ int Factorielle(int x)
 
 > On remarque que l'expression récursive de la fonction n'utilise, dans cet exemple, que des variables immutables...
 
+## Récursion et programmation fonctionnelle
+
+En programmation fonctionnelle, la récursion est la manière naturelle de traiter des structures
+qui *se répètent à différentes échelles* (listes, arbres, fractales...).
+
+**Tout algorithme récursif suit le même schéma :**
+
+1. **Cas de base** : le plus petit problème qu'on sait résoudre directement
+2. **Règle de combinaison** : résoudre le problème en combinant des solutions plus petites
+
+```csharp
+// Somme récursive d'une liste
+int Sum(IEnumerable<int> list)
+{
+    if (!list.Any()) return 0;               // Cas de base : liste vide → 0
+    return list.First() + Sum(list.Skip(1)); // Règle : premier + somme du reste
+}
+
+// Fibonacci : chaque terme = somme des deux précédents
+long Fib(int n) => n <= 1 ? n : Fib(n - 1) + Fib(n - 2);
+```
+
+### Récursion et Fold
+
+La récursion et le `Aggregate` (Fold) sont les deux faces de la même pièce.
+`Aggregate` *est* la récursion, généralisée et rendue itérative pour éviter les stack overflows.
+
+```csharp
+// Sum récursif et Sum via Fold — équivalents conceptuellement
+int SumRecursive(IEnumerable<int> list)
+    => list.Any() ? list.First() + SumRecursive(list.Skip(1)) : 0;
+
+int SumFold(IEnumerable<int> list)
+    => list.Aggregate(0, (acc, val) => acc + val);
+```
+
+> Quand la structure du problème *est* récursive (arbre, fractal, décomposition hierarchique),
+> la récursion explicite reste plus lisible qu'un Fold. Les deux outils coexistent.
+
 ### Performances
 Historiquement, les fonctions récursives étaient moins performantes à cause du fait qu’un appel de fonction impliquait d’allouer des éléments sur la pile, ce qui n’est plus le cas avec la technologie `Tail Call Optimisation` alias `TCO`:
 

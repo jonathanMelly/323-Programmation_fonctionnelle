@@ -159,3 +159,74 @@ Le résultat est donc:
 <summary>Cliquer ici pour voir/vérifier la réponse</summary>
 Claude
 </details>
+
+## Fold — l'Agrégation Universelle
+
+Le concept de **Fold** (aussi appelé *reduce*, *aggregate*, *foldl* selon les langages)
+est l'une des idées les plus profondes de la programmation fonctionnelle.
+
+**Fold est universel : toutes les agrégations sont des cas particuliers de Fold.**
+
+Voici comment `Sum`, `Count`, `Max`, `Any` et `All` se réécrivent en Fold pur :
+
+```csharp
+var numbers = new[] { 1, 2, 3, 4, 5 };
+
+// Sum — additionner toutes les valeurs
+int sum = numbers.Aggregate(0, (acc, val) => acc + val);          // 15
+
+// Count — compter les éléments
+int count = numbers.Aggregate(0, (acc, _) => acc + 1);            // 5
+
+// Max — trouver le plus grand
+int max = numbers.Aggregate(int.MinValue,
+    (acc, val) => val > acc ? val : acc);                          // 5
+
+// Min — trouver le plus petit
+int min = numbers.Aggregate(int.MaxValue,
+    (acc, val) => val < acc ? val : acc);                          // 1
+
+// Any(pred) — y a-t-il au moins un élément satisfaisant le prédicat ?
+bool anyEven = numbers.Aggregate(false,
+    (acc, val) => acc || val % 2 == 0);                            // true
+
+// All(pred) — tous les éléments satisfont-ils le prédicat ?
+bool allPos = numbers.Aggregate(true,
+    (acc, val) => acc && val > 0);                                  // true
+```
+
+### Pourquoi comprendre Fold en profondeur ?
+
+Parce que comprendre Fold, c'est comprendre que :
+
+1. **L'abstraction est puissante** : une seule opération (`Aggregate`) remplace `Sum`, `Max`,
+   `Count`, `Any`, `All` et des dizaines d'autres. Le schéma est toujours le même :
+   *valeur de départ + règle de combinaison*.
+
+2. **La récursion et Fold sont équivalents** : en Haskell, Fold *est* défini récursivement.
+   En C#, `Aggregate` est une boucle optimisée qui évite les stack overflows, mais le concept
+   est identique.
+
+3. **Map est un Fold** : `Select` peut se réécrire en Fold qui accumule dans une nouvelle liste.
+
+```csharp
+// Select réécrit en Fold
+var doubled = numbers.Aggregate(
+    new List<int>(),                              // seed : liste vide
+    (acc, val) => { acc.Add(val * 2); return acc; } // accumulation
+);
+// [2, 4, 6, 8, 10]
+```
+
+> Dans d'autres langages (Haskell, Scala, F#), Fold est souvent la première chose enseignée.
+> En C#, `Aggregate` est sa traduction directe. Quand tu utilises `Sum()`, tu utilises un Fold.
+
+### Schéma mental de Fold
+
+```
+seed → [elem1] → acc1 → [elem2] → acc2 → [elem3] → acc3 → ... → résultat final
+         f(seed, elem1)    f(acc1, elem2)    f(acc2, elem3)
+```
+
+Commence avec le `seed`, applique la fonction `f` à chaque élément avec l'accumulateur courant,
+et le résultat de `f` devient le nouvel accumulateur. À la fin, l'accumulateur EST le résultat.

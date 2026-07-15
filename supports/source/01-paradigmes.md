@@ -136,6 +136,25 @@ Enumerable.Range(0, 5)
     .ForEach(instruction => Console.WriteLine(instruction));
 ```
 
+## Déclaratif vs Impératif — avec LINQ
+
+La différence se voit concrètement avec un filtre sur une liste de nombres :
+
+```csharp
+var numbers = new[] { 1, 2, 3, 4, 5, 6 };
+
+// Impératif : comment faire — on décrit les étapes
+var result = new List<int>();
+foreach (var n in numbers)
+    if (n % 2 == 0) result.Add(n);
+
+// Déclaratif (FP) : quoi faire — on décrit le résultat souhaité
+var result = numbers.Where(n => n % 2 == 0);
+```
+
+> LINQ n’est pas le but — c’est l’outil. Le vrai but est d’apprendre à *penser* de manière
+> déclarative : décrire la transformation souhaitée, pas les étapes pour y arriver.
+
 ## Les autres
 D’autres étiquettes existent pour décrire des manières de programmer, on trouve notamment:
 

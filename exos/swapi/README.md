@@ -70,7 +70,7 @@ class Film
 
 > On voit donc qu’on peut choisir les attributs qu’on veut récupérer...
 
-> La nouveauté: ‘JsonSerializer.Deserialize<ClasseDestination>(JSON)’ 
+> La nouveauté: `JsonSerializer.Deserialize<ClasseDestination>(JSON)` 
 
 ### Extensions
 

@@ -270,6 +270,56 @@ numbers.Where(IsBig).ToList();  // Retourne la liste des "grands" nombre (3,4,5)
 ```
 On relèvera le fait que la méthode qui effectue l'action de filtrage est la même dans les deux cas: `Where`
 
+## Closures (captures de variables)
+
+Un **lambda** peut capturer des variables de son *scope parent* et les utiliser dans son corps.
+On appelle ce mécanisme une **closure** (ou fermeture). La variable est "enfermée" dans le lambda.
+
+```csharp
+int threshold = 18;                                          // Variable dans le scope parent
+
+Func<int, bool> isAboveThreshold = age => age >= threshold; // Capture threshold → closure !
+
+Console.WriteLine(isAboveThreshold(20)); // true
+Console.WriteLine(isAboveThreshold(15)); // false
+
+// ATTENTION : la capture est par RÉFÉRENCE, pas par copie
+threshold = 21;
+Console.WriteLine(isAboveThreshold(20)); // false — threshold a changé !
+```
+
+> Ce comportement peut surprendre. Le lambda ne *copie pas* la valeur au moment où il est créé ;
+> il garde une *référence* vers la variable. Si la variable change après, le lambda voit la nouvelle valeur.
+
+### Pourquoi les closures sont utiles
+
+Les closures permettent de créer des fonctions paramétrées "à la volée" sans écrire de classe entière :
+
+```csharp
+// Générateur de prédicats — chaque appel crée une closure différente
+Func<int, Func<int, bool>> isAbove = min => x => x >= min;
+
+var isAdult       = isAbove(18); // Func<int, bool> qui capture min=18
+var isSenior      = isAbove(65); // Func<int, bool> qui capture min=65
+var isSuperlegal  = isAbove(21); // Func<int, bool> qui capture min=21
+
+var adults = numbers.Where(isAdult);
+```
+
+### Closures en LINQ
+
+Chaque lambda passé à `Where`, `Select`, `Aggregate`... est potentiellement une closure :
+
+```csharp
+double conversionFactor = 1.60934; // km par mile — capturé par le lambda ci-dessous
+
+IEnumerable<double> distances = miles.Select(m => m * conversionFactor); // closure !
+
+// Si conversionFactor change avant la matérialisation du pipeline (ToList()),
+// le résultat reflétera la nouvelle valeur — c'est l'interaction entre closures
+// et évaluation paresseuse qu'il faut bien comprendre.
+```
+
 ## Conclusion
 
 **Action** et **Func** sont donc 2 nouveaux *types* à connaître et maîtriser en C# afin de tirer le maximum de la programmation fonctionnelle et de comprendre ses mécanismes sous-jacents.

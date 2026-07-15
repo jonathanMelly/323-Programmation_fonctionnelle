@@ -1,0 +1,5 @@
+/* Sidebar: selected fil rouge context highlighted with brand color */
+.VPSidebarItem.fr-active-ctx > .item .text {
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+}

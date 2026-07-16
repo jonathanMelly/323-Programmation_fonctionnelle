@@ -1,5 +1,15 @@
 # Filter et fonctions d'ordre supérieur
 
+La programmation fonctionnelle repose sur un concept clé : les fonctions sont des valeurs comme les autres — on peut les passer en paramètre, les stocker dans une variable, les combiner. Cette thématique introduit `Func<T>`, les lambdas et le filtrage de collections : les briques sur lesquelles tout le reste s'appuie.
+
+**À l'issue de cette thématique, vous serez capable de :**
+- déclarer et utiliser un `Func<T, bool>` comme paramètre d'une méthode
+- écrire une expression lambda et expliquer comment elle capture les variables de son contexte (closure)
+- filtrer une collection avec `Where` de façon déclarative
+- expliquer ce qu'est l'évaluation paresseuse et pourquoi elle est importante en LINQ
+
+> **Ordre de lecture :** deux exercices sont associés à cette thématique (02 et 03). Lire `02a-fonctions-sup.md` avant l'exercice 02, puis `02b-filter.md` avant l'exercice 03.
+
 ## Théorie
 
 - [Synthèse PPT](../supports/source/02-FilterLambdaFctSup.pptx)
@@ -23,7 +33,12 @@ Répondre aux besoins du fil rouge en enrichissant la bibliothèque `DataSeries<
 
 ### Exercices complémentaires
 
+#### Activités prioritaires
+
 - [Retour sur la place du marché](../exos/marché/enoncé.md) — points clés : import de données (CSV, copier-coller, librairie Excel), relation POO/FP, syntaxe LINQ. [Cheatsheet LINQ](../supports/linq-cheatsheet.pdf) disponible pour référence
 - [Words](../exos/words/)
+
+#### Activités libres
+
 - [Cinéma](../exos/cinema/)
 - [Hardware](../exos/hardware/)

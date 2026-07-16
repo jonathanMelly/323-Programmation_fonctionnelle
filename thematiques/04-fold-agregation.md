@@ -1,5 +1,13 @@
 # Fold et agrégation
 
+Filter et Map traitent chaque élément indépendamment. Fold (alias `Aggregate` en LINQ) parcourt une séquence en accumulant un résultat — somme, minimum, chaîne construite, structure complexe. C'est l'opération la plus puissante des trois, et celle qui permet d'exprimer presque tout le reste.
+
+**À l'issue de cette thématique, vous serez capable de :**
+- utiliser `Aggregate` pour réduire une séquence à une valeur unique
+- choisir entre `Sum`, `Min`, `Max`, `Count` et `Aggregate` selon le besoin
+- regrouper des données par clé avec `GroupBy` et les agréger
+- expliquer pourquoi Fold est considéré comme l'opération fondamentale de la FP
+
 ## Théorie
 
 - [04-Reduce](../supports/source/04-Reduce.md)
@@ -22,9 +30,14 @@ Répondre aux besoins du fil rouge en enrichissant la bibliothèque `DataSeries<
 
 ### Exercices complémentaires
 
+#### Activités prioritaires
+
 - [Mib-map → Livrable 2](../exos/mib-map/README.md#livrable-2)
 - [Rando](../exos/rando/)
 - [Icequeen](../exos/icequeen/README.md)
+
+#### Activités libres
+
 - [Mib-map : Mesures de performances](../exos/mib-map/README.md#mesures-de-performances)
 - Intégrer Map au projet PTL
 - [La revanche du marché (Reduce)](../exos/mib-reduce/README.md)

@@ -1,5 +1,13 @@
 # Map et transformation
 
+Après avoir filtré des collections, l'étape naturelle est de les transformer. Map (alias `Select` en LINQ) applique une fonction à chaque élément et produit une nouvelle collection — sans toucher à l'originale. C'est le fondement de la transformation déclarative et de la composition de pipelines.
+
+**À l'issue de cette thématique, vous serez capable de :**
+- transformer chaque élément d'une collection avec `Select` sans muter la source
+- enchaîner plusieurs opérations LINQ en pipeline lisible
+- expliquer la différence entre `Select` et `SelectMany` (flatMap)
+- décrire pourquoi l'absence de mutation simplifie le raisonnement sur le code
+
 ## Théorie
 
 - [Exemple introductif](../supports/source/03-MapIntro.md)
@@ -22,6 +30,11 @@ Répondre aux besoins du fil rouge en enrichissant la bibliothèque `DataSeries<
 
 ### Exercices complémentaires
 
-- Consolidation de Filter : [Words](../exos/words/), [Cinéma](../exos/cinema/), [Hardware](../exos/hardware/)
+#### Activités prioritaires
+
 - [Mib-map](../exos/mib-map) — échauffement Map
 - [Rando](../exos/rando/)
+
+#### Activités libres
+
+- Consolidation de Filter : [Words](../exos/words/), [Cinéma](../exos/cinema/), [Hardware](../exos/hardware/)

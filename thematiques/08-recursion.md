@@ -1,5 +1,13 @@
 # Récursivité
 
+Certains problèmes — arbres, fractales, brackets de tournoi — ne se résolvent pas proprement avec une boucle. La récursion décompose le problème en un cas de base et un appel réduit sur lui-même. En FP, cette décomposition remplace les variables muables d'une boucle par un accumulateur passé en paramètre, ce qui maintient la pureté des fonctions.
+
+**À l'issue de cette thématique, vous serez capable de :**
+- identifier un problème récursif et définir son cas de base
+- écrire une fonction récursive avec accumulateur (sans variable muable)
+- expliquer le lien entre récursion terminale et Fold
+- parcourir une structure arborescente par récursion
+
 ## Théorie
 
 - [Recursivite](../supports/source/08-Recursivite.md)
@@ -9,6 +17,8 @@
 **Particularités utiles pour les activités**
 
 - [Récursion et programmation fonctionnelle](../supports/source/08-Recursivite.md#recursion-et-programmation-fonctionnelle)
+
+La récursion impérative (fibonacci en procédural) repose souvent sur des variables muables et un état partagé. La version FP remplace cet état par un **accumulateur en paramètre** : chaque appel reçoit une valeur intermédiaire et la passe à l'appel suivant, sans jamais écrire dans une variable externe. Ce pattern est équivalent à un `Aggregate` (Fold) déroulé à la main — ce qui explique pourquoi Fold peut exprimer n'importe quelle récursion terminale.
 
 ## Activités
 

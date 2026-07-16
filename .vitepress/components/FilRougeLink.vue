@@ -4,7 +4,7 @@ import { withBase } from 'vitepress'
 import { useFilRouge } from '../composables/useFilRouge'
 
 const props = defineProps<{
-  ex: string    // path after scenario, e.g. '03-filter/README.md', 'data/cs2.csv'
+  ex: string    // path after scenario, e.g. '03-tri-filter/README.md', 'data/cs2.csv'
   label: string
 }>()
 

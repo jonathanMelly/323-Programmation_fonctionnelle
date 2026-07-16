@@ -45,7 +45,7 @@ l'équipe qu'en cours de saison — leurs matchs précédents seront simulés en
 ```
 Solution/
   DataSeries/                   ← Bibliothèque réutilisable (class library)
-    DataPoint.cs                — record immuable
+    DataPoint.cs                — classe immuable (convertie en record en exercice 07)
     DataSeries.cs               — la bibliothèque principale
     DataSeriesExtensions.cs     — ajouté en exercice 06
   EsportApp/                    ← Application principale (console app)
@@ -119,14 +119,14 @@ Le parser est fourni dans la donnée de chaque exercice.
 
 | Exercice | Thème | Concepts FP |
 |----------|-------|-------------|
-| [01-draft](01-draft/) | `DataPoint` + `DataSeries.From/FromCsv` | Immutabilité |
-| [02-generate](02-generate/) | Génération aléatoire + `Enumerable.Range` | HOF, closures, paresse |
-| [03-filter](03-filter/) | `.Filter()` + `.RemoveOutliers()` + paresse | HOF, closures, paresse |
-| [04-transform](04-transform/) | `.Transform()` + `.Normalize()` + `.Smooth()` | Map, composition |
-| [05-stats](05-stats/) | `.Fold()` + `.Statistics()` + `.SlidingWindow()` | Fold universel |
-| [06-extensions](06-extensions/) | Extensions fluentes + DSL | Composition f ∘ g, DSL |
-| [07-purity](07-purity/) | Audit de pureté + `.Snapshot()` | Pureté, transparence réf. |
-| [08-recursion](08-recursion/) | `.Decompose()` récursif + bracket de tournoi | Récursion, lien avec Fold |
+| [01-equipe-genericite](01-equipe-genericite/) | `DataPoint` + `DataSeries.From` | Immutabilité, généricité |
+| [02-recrues-generation](02-recrues-generation/) | `FromCsv` + génération aléatoire | HOF, closures, paresse |
+| [03-tri-filter](03-tri-filter/) | `.Filter()` + `.RemoveOutliers()` + paresse | HOF, closures, paresse |
+| [04-performance-map](04-performance-map/) | `.Transform()` + `.Normalize()` + `.Smooth()` | Map, composition |
+| [05-classement-fold](05-classement-fold/) | `.Fold()` + `.Statistics()` + `.SlidingWindow()` | Fold universel |
+| [06-rapport-dsl](06-rapport-dsl/) | Extensions fluentes + DSL | Composition f ∘ g, DSL |
+| [07-audit-purete](07-audit-purete/) | Audit de pureté + records + `with` + `.Snapshot()` | Pureté, transparence réf. |
+| [08-tournoi-recursion](08-tournoi-recursion/) | `.Decompose()` récursif + bracket de tournoi | Récursion, lien avec Fold |
 
 ---
 

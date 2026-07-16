@@ -8,6 +8,7 @@
 
 - [Composition de fonctions (f ∘ g)](../supports/source/05-Extension.md#composition-de-fonctions-f-∘-g)
 - [DSL : Domain Specific Language](../supports/source/05-Extension.md#dsl-domain-specific-language)
+- [Zip — combiner deux séquences en parallèle](../supports/source/05-Extension.md#zip-—-combiner-deux-sequences-en-parallele)
 
 ## Activités
 
@@ -15,7 +16,7 @@ Répondre aux besoins du fil rouge en enrichissant la bibliothèque `DataSeries<
 
 ### Fil rouge
 
-- [06-extensions — Dashboard ESL](../exos/fil-rouge/esport/06-extensions/) — comparer kills et assists côte à côte dans un dashboard fluent — en enrichissant la bibliothèque
+- [06-rapport-dsl — Dashboard ESL](../exos/fil-rouge/esport/06-rapport-dsl/) — comparer kills et assists côte à côte dans un dashboard fluent — en enrichissant la bibliothèque
 
 ### Exercices complémentaires
 

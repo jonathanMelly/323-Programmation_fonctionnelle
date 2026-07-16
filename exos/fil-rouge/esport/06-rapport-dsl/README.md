@@ -2,10 +2,13 @@
 
 > Partie 5 — Extensions fluentes + `ToCsv()` + `WithFallback()` + `PairWith()` + DSL
 
-**Concepts FP :** Composition · DSL (Domain Specific Language) · Zip comme traitement parallèle
-→ Théorie : [Méthodes d'extension et chaînage](../../../supports/source/05-Extension.md) ·
-[Composition de fonctions f ∘ g](../../../supports/source/05-Extension.md#composition-de-fonctions-f-∘-g) ·
-[DSL](../../../supports/source/05-Extension.md#dsl-domain-specific-language)
+## Concepts théoriques
+
+- [Thématique 05 — Extensions et DSL fluent](../../../thematiques/05-extensions-dsl.md)
+- [Méthodes d'extension et chaînage](../../../supports/source/05-Extension.md)
+- [Composition de fonctions f ∘ g](../../../supports/source/05-Extension.md#composition-de-fonctions-f-∘-g)
+- [DSL — Domain Specific Language](../../../supports/source/05-Extension.md#dsl-domain-specific-language)
+- [Zip — combiner deux séquences en parallèle](../../../supports/source/05-Extension.md#zip-—-combiner-deux-sequences-en-parallele)
 
 ## Contexte
 
@@ -98,6 +101,7 @@ public static DataSeries<T> WithFallback<T>(
 
 `Zip` (ici `PairWith`) combine deux listes élément par élément — pattern fondamental pour
 traiter des séries corrélées (kills + assists, température + humidité...).
+→ [Zip — combiner deux séquences en parallèle](../../../supports/source/05-Extension.md#zip-—-combiner-deux-sequences-en-parallele)
 
 ```csharp
 public static DataSeries<(double Left, double Right)> PairWith(
@@ -127,8 +131,8 @@ Comparer kills normalisés et assists normalisés de Léa :
 var kills   = valorant.Filter(m => m.Player == "Léa").Transform(m => (double)m.Kills);
 var assists = valorant.Filter(m => m.Player == "Léa").Transform(m => (double)m.Assists);
 
-var rapport = kills.Normalize().PairWith(assists.Normalize());
-foreach (var (k, a) in rapport.Values)
+var report = kills.Normalize().PairWith(assists.Normalize());
+foreach (var (k, a) in report.Values)
     Console.WriteLine($"kills={k:F2}  assists={a:F2}");
 ```
 
@@ -150,6 +154,24 @@ valorant
     .ToCsv("lea_kills_smoothed.csv");
 ```
 
+**Un pipeline est aussi une valeur.** La préparation commune (lisser puis combler les trous)
+se répète pour chaque série du rapport — la stocker dans une variable :
+
+```csharp
+// Préparation commune : lisser puis combler les trous
+Func<DataSeries<double>, DataSeries<double>> prepare =
+    s => s.Smooth(3).WithFallback(0.0, v => double.IsNaN(v));
+
+// Réutilisé sur chaque série du rapport hebdomadaire
+prepare(killsLea).ToCsv("lea_kills.csv");
+prepare(assistsLea).ToCsv("lea_assists.csv");
+prepare(kdaRaphael).ToCsv("raphael_kda.csv");
+```
+
+Composer deux pipelines stockés donne un nouveau pipeline — c'est exactement `f ∘ g` :
+→ [Composition explicite avec Func](../../../supports/source/05-Extension.md#composition-explicite-avec-func) ·
+[Fonctions comme valeurs](../../../supports/source/02a-fonctions-sup.md)
+
 ---
 
 ## Étape 4 — Interface CLI
@@ -169,9 +191,9 @@ dotnet run -- --game valorant --player Léa --stat kda --export lea_kda.csv
 ```csharp
 if (args.Contains("--export"))
 {
-    var fichier = args[Array.IndexOf(args, "--export") + 1];
-    valeurs.ToCsv(fichier);
-    Console.WriteLine($"Exporté : {fichier}");
+    var file = args[Array.IndexOf(args, "--export") + 1];
+    values.ToCsv(file);
+    Console.WriteLine($"Exporté : {file}");
 }
 ```
 

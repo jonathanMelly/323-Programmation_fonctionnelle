@@ -127,16 +127,50 @@ Crée un dictionnaire selon la fonction d'affectation pour la clé et la valeur.
 Cela peut s'avérer utile dans certaines situations, par exemple pour retrouver plus rapidement une information. En effet, retrouver une personne par index dans un dictionnaire comme ceci:
 
 ```csharp
-Dictionary<int, Person> dico;
-Person toto = dico[712]
+Dictionary<int, Person> dict;
+Person person = dict[712]
 ```
 est beaucoup plus rapide qu'une recherche LinQ comme cela
 
 ```csharp
 List<Person> people;
-Person toto = people.Where(p => p.Id == 712).First();
+Person person = people.Where(p => p.Id == 712).First();
 ```
 Si vous en doutez, essayez [ceci](../../assets/SearchSpeed/)...
+
+### SelectMany — le flatMap
+
+`Select` transforme chaque élément en **un** résultat : une collection de N éléments
+donne toujours N résultats. Mais que faire si chaque élément produit *plusieurs* résultats —
+une collection de collections ?
+
+```csharp
+// Chaque joueur a une liste de matchs
+var teams = new[]
+{
+    new { Player = "Léa",     Matches = new[] { "m1", "m2", "m3" } },
+    new { Player = "Raphaël", Matches = new[] { "m4", "m5" } },
+};
+
+// Select → une séquence DE séquences (imbriquée)
+IEnumerable<string[]> nested = teams.Select(t => t.Matches);
+// { ["m1","m2","m3"], ["m4","m5"] }
+
+// SelectMany → une seule séquence aplatie (d'où le nom flatMap dans d'autres langages)
+IEnumerable<string> flat = teams.SelectMany(t => t.Matches);
+// { "m1", "m2", "m3", "m4", "m5" }
+```
+
+Contraste :
+
+| | Signature du sélecteur | Résultat |
+|---|---|---|
+| `Select` | `T → TResult` | N éléments → N résultats |
+| `SelectMany` | `T → IEnumerable<TResult>` | N éléments → tous les résultats concaténés |
+
+`SelectMany` est un map qui **aplatit** : il applique le sélecteur puis fusionne
+les séquences produites en une seule — parfait pour agréger les matchs de toute
+une équipe en un seul pipeline.
 
 ## Composition de pipelines
 

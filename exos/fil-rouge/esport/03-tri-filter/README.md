@@ -2,10 +2,13 @@
 
 > Partie 2 — `.Filter()` + `.RemoveOutliers()` + `.HasAny()` / `.AllMatch()` + évaluation paresseuse
 
-**Concepts FP :** Fonctions d'ordre supérieur · Closures · Évaluation paresseuse
-→ Théorie : [Fonctions d'ordre supérieur](../../../supports/source/02a-fonctions-sup.md) ·
-[Closures](../../../supports/source/02a-fonctions-sup.md#closures-captures-de-variables) ·
-[Évaluation paresseuse](../../../supports/source/02b-filter.md#evaluation-paresseuse-deferred-execution)
+## Concepts théoriques
+
+- [Thématique 02 — Filter et fonctions d'ordre supérieur](../../../thematiques/02-filter-fonctions-sup.md)
+- [Fonctions d'ordre supérieur](../../../supports/source/02a-fonctions-sup.md)
+- [Filter et prédicats](../../../supports/source/02b-filter.md)
+- [Closures](../../../supports/source/02a-fonctions-sup.md#closures-captures-de-variables)
+- [Évaluation paresseuse](../../../supports/source/02b-filter.md#evaluation-paresseuse-deferred-execution)
 
 ## Contexte
 
@@ -51,10 +54,26 @@ jamais modifiée. C'est l'immuabilité : chaque appel produit un nouvel objet.
 Vérifier dans `Program.cs` :
 
 ```csharp
-var victoires = valorant.Filter(m => m.Won);
-Console.WriteLine(valorant.Count);   // 25 — inchangé
-Console.WriteLine(victoires.Count);  // sous-ensemble
+var wins = valorant.Filter(m => m.Won);
+Console.WriteLine(valorant.Count); // 25 — inchangé
+Console.WriteLine(wins.Count);     // sous-ensemble
 ```
+
+**Les prédicats sont des valeurs.** Plutôt que d'écrire les lambdas en ligne, les déclarer,
+les nommer et les combiner comme n'importe quelle variable :
+
+```csharp
+Func<ValorantMatch, bool> isWin       = m => m.Won;
+Func<ValorantMatch, bool> isHighScore = m => m.Kills > 20;
+
+// Combinaison : un nouveau prédicat (victoire éclatante) construit à partir des deux autres
+Func<ValorantMatch, bool> isCrushingWin = m => isWin(m) && isHighScore(m);
+
+var top = valorant.Filter(isCrushingWin);
+```
+
+Une fonction stockée dans une variable se passe, se combine, se réutilise —
+→ [Fonctions comme valeurs](../../../supports/source/02a-fonctions-sup.md)
 
 ---
 
@@ -92,20 +111,20 @@ Appliquer à chaque jeu pour éliminer les valeurs impossibles :
 
 ```csharp
 // Valorant : kills plausibles pour un match compétitif
-var valorantValide = valorant.RemoveOutliers(m =>
+var valorantValid = valorant.RemoveOutliers(m =>
     m.Kills   >= 0 && m.Kills   <= 50 &&
     m.Deaths  >= 1 && m.Deaths  <= 30 &&
     m.Assists >= 0
 );
 
 // CS2 : contraintes similaires
-var cs2Valide = cs2.RemoveOutliers(m =>
+var cs2Valid = cs2.RemoveOutliers(m =>
     m.Kills + m.Assists <= 50 &&
     m.Deaths >= 1
 );
 
 // LoL : le support a structurellement peu de kills
-var lolValide = lol.RemoveOutliers(m =>
+var lolValid = lol.RemoveOutliers(m =>
     m.Kills   <= 10 &&
     m.Deaths  >= 1  &&
     m.Assists >= 0  &&
@@ -147,10 +166,10 @@ public bool AllMatch(Func<T, bool> predicate)
 Utilisation :
 
 ```csharp
-Console.WriteLine(valorantValide.HasAny(m => m.Kills > 20));
+Console.WriteLine(valorantValid.HasAny(m => m.Kills > 20));
 // → Léa a-t-elle au moins un match avec plus de 20 kills ?
 
-Console.WriteLine(lolValide.AllMatch(m => m.Deaths >= 1));
+Console.WriteLine(lolValid.AllMatch(m => m.Deaths >= 1));
 // → Tous les matchs de Noé ont-ils au moins 1 mort ?
 ```
 
@@ -206,8 +225,18 @@ Ajouter les flags `--player <nom>` et `--filter wins|losses|all`.
 Ces deux flags se combinent avec `--game` introduit en exercice 01.
 
 **Avant de coder :** Si `--player` est absent, que filtrer ? Si `--filter` vaut `"all"`,
-faut-il appliquer un prédicat ? Pourquoi la composabilité de `Filter` simplifie-t-elle
-la combinaison de ces deux flags avec `--game` ?
+faut-il appliquer un prédicat ? Plutôt qu'un if/else par mode, que gagne-t-on à stocker
+les prédicats dans un **dictionnaire** ? Que faut-il faire pour ajouter un critère
+`--filter close` (matchs serrés) ?
+
+<details>
+<summary>Indice — dispatch fonctionnel</summary>
+
+Une fonction est une valeur : elle peut être la *valeur* d'un dictionnaire.
+`Dictionary<string, Func<ValorantMatch, bool>>` associe chaque mode CLI à son prédicat —
+le if/else disparaît.
+
+</details>
 
 <details>
 <summary>Voir la solution</summary>
@@ -220,7 +249,20 @@ string? player = args.Contains("--player")
 string filterMode = args.Contains("--filter")
     ? args[Array.IndexOf(args, "--filter") + 1]
     : "all";
+
+// Table de prédicats — le mode CLI sélectionne une fonction
+var filters = new Dictionary<string, Func<ValorantMatch, bool>>
+{
+    ["wins"]   = m => m.Won,
+    ["losses"] = m => !m.Won,
+    ["all"]    = m => true,
+};
+
+var result = valorant.Filter(filters[filterMode]);
 ```
+
+Ajouter un critère = ajouter **une ligne dans la table, zéro if**. La fonction choisie
+à l'exécution est une valeur comme une autre.
 
 `--player` et `--filter` s'enchaînent naturellement : `Filter` retourne une `DataSeries` —
 composabilité des flags = composabilité du pipeline.

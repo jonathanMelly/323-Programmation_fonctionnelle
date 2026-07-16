@@ -2,10 +2,12 @@
 
 > Partie 3 — `.Transform()` + `.Normalize()` + `.Smooth()`
 
-**Concepts FP :** Map · Composition de pipelines · Closures dans les transformations
-→ Théorie : [Map / Select](../../../supports/source/03-Map.md) ·
-[Composition de pipelines](../../../supports/source/03-Map.md#composition-de-pipelines) ·
-[Closures dans les transformations](../../../supports/source/03-Map.md#closures-dans-les-transformations)
+## Concepts théoriques
+
+- [Thématique 03 — Map et transformation](../../../thematiques/03-map-transformation.md)
+- [Map / Select](../../../supports/source/03-Map.md)
+- [Composition de pipelines](../../../supports/source/03-Map.md#composition-de-pipelines)
+- [Closures dans les transformations](../../../supports/source/03-Map.md#closures-dans-les-transformations)
 
 ## Contexte
 
@@ -189,13 +191,13 @@ public DataSeries<double> Smooth(int windowSize)
 Observer la closure :
 
 ```csharp
-int fenetre = 3;
-var lisse = kdaLea.Smooth(fenetre);
-fenetre = 10; // Sans effet — fenetre a été copiée à l'appel de Smooth (passage d'argument)
+int window = 3;
+var smoothed = kdaLea.Smooth(window);
+window = 10; // Sans effet — window a été copiée à l'appel de Smooth (passage d'argument)
 ```
 
 > Attention à la nuance : une variable **capturée** par un lambda l'est **par référence** —
-> sa modification ultérieure serait visible. Ici `fenetre` n'est pas capturée : elle est
+> sa modification ultérieure serait visible. Ici `window` n'est pas capturée : elle est
 > passée en argument à `Smooth`, donc copiée. C'est `windowSize` (le paramètre) que le
 > lambda capture, et il ne change plus.
 > → [Closures](../../../supports/source/02a-fonctions-sup.md#closures-captures-de-variables)
@@ -207,8 +209,17 @@ fenetre = 10; // Sans effet — fenetre a été copiée à l'appel de Smooth (pa
 Ajouter `--stat kda|kills|assists` pour choisir la transformation à afficher.
 
 **Avant de coder :** Comment mapper une valeur de flag (`"kda"`, `"kills"`, `"assists"`) à une
-transformation différente ? Quel opérateur C# remplace avantageusement une chaîne de `if/else`
-pour ce type de dispatch ? Que faire si la valeur passée est inconnue ?
+transformation différente ? Plutôt qu'une chaîne de `if/else` (ou même un `switch`),
+que permet un **dictionnaire de fonctions** ? Que faire si la valeur passée est inconnue ?
+
+<details>
+<summary>Indice — table de sélecteurs</summary>
+
+Comme la table de prédicats de l'exercice 03 : un sélecteur `Func<ValorantMatch, double>`
+est une valeur — il peut être stocké dans un `Dictionary` et choisi à l'exécution.
+→ [Fonctions comme valeurs](../../../supports/source/02a-fonctions-sup.md)
+
+</details>
 
 <details>
 <summary>Voir la solution</summary>
@@ -218,17 +229,46 @@ string stat = args.Contains("--stat")
     ? args[Array.IndexOf(args, "--stat") + 1]
     : "kda";
 
-DataSeries<double> valeurs = stat switch
+// Table de sélecteurs — le flag CLI choisit la fonction de transformation
+var selectors = new Dictionary<string, Func<ValorantMatch, double>>
 {
-    "kda"     => valorantSerie.Transform(m =>
-                     (m.Kills + m.Assists) / (double)(m.Deaths == 0 ? 1 : m.Deaths)),
-    "kills"   => valorantSerie.Transform(m => (double)m.Kills),
-    "assists" => valorantSerie.Transform(m => (double)m.Assists),
-    _         => throw new ArgumentException($"Stat inconnue : {stat}")
+    ["kda"]     = m => (m.Kills + m.Assists) / (double)(m.Deaths == 0 ? 1 : m.Deaths),
+    ["kills"]   = m => m.Kills,
+    ["assists"] = m => m.Assists,
 };
+
+if (!selectors.ContainsKey(stat))
+    throw new ArgumentException($"Stat inconnue : {stat}");
+
+DataSeries<double> values = valorantSeries.Transform(selectors[stat]);
 ```
 
+La fonction choisie à l'exécution est une valeur comme une autre — ajouter une stat =
+une ligne dans la table, et l'appel à `Transform` ne change pas.
+
 </details>
+
+---
+
+## Étape bonus (avancé) — SelectMany
+
+> Étape optionnelle — pour aller plus loin.
+
+Les KDA sont calculés par jeu, mais le coaching staff veut la liste **plate** de tous les
+KDA de l'équipe, tous jeux confondus. Le problème : une collection de séries est une
+collection *imbriquée* — `Select` produirait une séquence de séquences.
+
+```csharp
+var allSeries = new[] { kdaLea, kdaRaphael, kdaNoe, kdaDylan, kdaKiara };
+
+// Select → IEnumerable<IEnumerable<double>> (imbriqué)
+// SelectMany → IEnumerable<double> (aplati)
+var allKda = allSeries.SelectMany(s => s.Values);
+
+Console.WriteLine($"KDA de l'équipe entière : {allKda.Count()} valeurs");
+```
+
+→ [SelectMany — le flatMap](../../../supports/source/03-Map.md#selectmany-—-le-flatmap)
 
 ---
 

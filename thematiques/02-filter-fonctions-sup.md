@@ -18,8 +18,8 @@
 
 Répondre aux besoins du fil rouge en enrichissant la bibliothèque `DataSeries<T>` :
 
-- [02-generate — Générer les données manquantes](../exos/fil-rouge/esport/02-generate/)
-- [03-filter — Valider les stats](../exos/fil-rouge/esport/03-filter/)
+- [02-recrues-generation — Charger les CSV (`FromCsv`, première HOF) et générer les données manquantes](../exos/fil-rouge/esport/02-recrues-generation/)
+- [03-tri-filter — Valider les stats](../exos/fil-rouge/esport/03-tri-filter/)
 
 ### Exercices complémentaires
 

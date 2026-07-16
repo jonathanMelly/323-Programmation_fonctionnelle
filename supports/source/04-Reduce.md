@@ -88,6 +88,23 @@ Famille de 3: Paul,Helmut,Ernest,Sidonie
 Famille de 4: Lucie
 ```
 
+**Agrégation par clé — la lecture FP.** `GroupBy` seul ne réduit rien : il réorganise.
+La réduction arrive quand chaque groupe est agrégé — un `Fold` *par clé* :
+
+```csharp
+// Âge moyen par taille de fratrie — GroupBy + Aggregate en un pipeline
+var averageAgeBySiblings = cid5d
+    .GroupBy(p => p.Sisters + p.Brothers)
+    .Select(g => new {
+        FamilySize = g.Key,
+        AverageAge = g.Aggregate(0.0, (acc, p) => acc + p.Age) / g.Count()
+    });
+```
+
+Le motif `GroupBy(clé).Select(g => g.Aggregate(...))` est l'équivalent fonctionnel du
+`GROUP BY` + fonction d'agrégat de SQL : partitionner, puis réduire chaque partition
+à une valeur. Aucune boucle, aucun dictionnaire mutable rempli à la main.
+
 ### Aggrégateur générique
 
 Outre les accumulateurs particuliers fournis par _LINQ_, il existe une fonction d'ordre supérieur générique pour la réduction nommée `Aggregate` dont voici un premier exemple:

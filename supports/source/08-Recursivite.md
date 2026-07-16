@@ -18,7 +18,8 @@ Rappel mathématique:
 
 On peut donc écrire la fonction factorielle ainsi en C#:
 ```csharp
-int Factorielle(int x)
+// Version itérative de la factorielle
+int Factorial(int x)
 {
     int res = 1;
     for (int i = x; i > 1; i--) res *= i;
@@ -33,10 +34,11 @@ En observant le rappel ci-dessus, on voit que l'on peut écrire:
 Du coup, comme le calcul de `1!` est trivial, on peut écrire la fonction ainsi:
 
 ```csharp
-int Factorielle(int x)
+// Version récursive de la factorielle
+int Factorial(int x)
 {
     if (x==1) return 1;
-    return x * Factorielle(x - 1);
+    return x * Factorial(x - 1);
 }
 ```
 

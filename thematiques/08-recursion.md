@@ -16,7 +16,7 @@ Répondre aux besoins du fil rouge en enrichissant la bibliothèque `DataSeries<
 
 ### Fil rouge
 
-- [08-recursion — Bracket de tournoi](../exos/fil-rouge/esport/08-recursion/) — analyser un bracket de tournoi par décomposition récursive — en enrichissant la bibliothèque
+- [08-tournoi-recursion — Bracket de tournoi](../exos/fil-rouge/esport/08-tournoi-recursion/) — analyser un bracket de tournoi par décomposition récursive — en enrichissant la bibliothèque
 
 ### Exercices complémentaires
 

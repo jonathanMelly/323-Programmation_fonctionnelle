@@ -10,6 +10,7 @@
 
 - [Slides paradigmes (Kahoot)](https://create.kahoot.it/share/ict-323-paradigme/ed5b81f2-c5be-4aa4-9e50-acdbbe368c86)
 - [Théorie](../supports/source/01-paradigmes.md)
+- [Généricité — abstraire les types](../supports/source/01b-genericite.md)
 - Découverte de la syntaxe requête LINQ au moyen de la cheatsheet, entre les étapes 1 et 2 de l'exercice pratique
 - [Kahoot 01 paradigmes](https://create.kahoot.it/my-library/kahoots/5ec61ea2-4bb2-4dde-bb0f-94e1d2f222e2)
 
@@ -21,7 +22,7 @@ Répondre aux besoins du fil rouge en construisant et adaptant la bibliothèque 
 
 Chaque thématique s'appuie sur **[le fil rouge](../exos/fil-rouge/esport/README.md)** — un scénario commun qui évolue et s'enrichit au fil des exercices.
 
-- [01-draft — Scouting](../exos/fil-rouge/esport/01-draft/README.md) — charger et explorer les données de matchs des 5 joueurs de l'équipe (Valorant, CS2, LoL) — en construisant la bibliothèque
+- [01-equipe-genericite — L'équipe](../exos/fil-rouge/esport/01-equipe-genericite/README.md) — modéliser l'équipe avec des classes immuables et explorer des données de matchs en dur (Valorant, CS2, LoL) — en construisant la bibliothèque générique
 
 ### Exercices complémentaires
 

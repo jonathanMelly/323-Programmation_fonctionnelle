@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 import { glob } from 'glob'
 import path from 'path'
-import { readdirSync, statSync, existsSync, writeFileSync, copyFileSync, mkdirSync } from 'fs'
+import { readdirSync, statSync, existsSync, writeFileSync, copyFileSync, mkdirSync, readFileSync } from 'fs'
 import type MarkdownIt from 'markdown-it'
 
 process.env.VITE_EXTRA_EXTENSIONS = 'docx,pdf,csv'
@@ -93,16 +93,14 @@ export default defineConfig({
       {
         text: 'Thématiques',
         collapsed : false,
-        items: [
-          { text: '01 — Paradigmes fonctionnels',       link: '/thematiques/01-paradigmes-fonctionnels' },
-          { text: '02 — Filter et fonctions sup.',      link: '/thematiques/02-filter-fonctions-sup' },
-          { text: '03 — Map et transformation',         link: '/thematiques/03-map-transformation' },
-          { text: '04 — Fold et agrégation',            link: '/thematiques/04-fold-agregation' },
-          { text: '05 — Extensions et DSL fluent',      link: '/thematiques/05-extensions-dsl' },
-          { text: '06 — Pureté et immutabilité',        link: '/thematiques/06-purete-immutabilite' },
-          { text: '07 — Évaluation pratique',           link: '/thematiques/07-evaluation' },
-          { text: '08 — Récursivité',                   link: '/thematiques/08-recursion' },
-        ]
+        items: glob.sync('thematiques/*.md', { posix: true })
+          .sort()
+          .map(f => {
+            const num = path.basename(f).match(/^(\d+)/)?.[1]
+            const h1 = readFileSync(f, 'utf-8').match(/^#\s+(.*)/m)?.[1]
+            const title = h1 ?? path.basename(f).replace('.md', '')
+            return { text: num ? `${num} — ${title}` : title, link: '/' + f.replace('.md', '') }
+          })
       },
       {
         text: 'Supports',

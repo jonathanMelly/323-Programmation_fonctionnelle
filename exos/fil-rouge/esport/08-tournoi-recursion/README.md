@@ -2,9 +2,11 @@
 
 > Partie 8 — `.Decompose()` récursif + cas de base + règle de combinaison
 
-**Concepts FP :** Récursion = décomposition fonctionnelle · Lien avec Fold
-→ Théorie : [Récursivité](../../../supports/source/08-Recursivite.md) ·
-[Récursion et Fold](../../../supports/source/08-Recursivite.md#recursion-et-fold)
+## Concepts théoriques
+
+- [Thématique 08 — Récursivité](../../../thematiques/08-recursion.md)
+- [Récursivité — décomposition fonctionnelle](../../../supports/source/08-Recursivite.md)
+- [Récursion et Fold](../../../supports/source/08-Recursivite.md#recursion-et-fold)
 
 ## Contexte
 
@@ -38,9 +40,9 @@ public IEnumerable<DataSeries<T>> Decompose(int minSize)
     if (/* cas de base */)
         return // ...
 
-    int mid    = // ...
-    var gauche = // ...
-    var droite = // ...
+    int mid   = // ...
+    var left  = // ...
+    var right = // ...
 
     return // ...
 }
@@ -57,11 +59,11 @@ public IEnumerable<DataSeries<T>> Decompose(int minSize)
     if (values.Count <= minSize)
         return new[] { this };
 
-    int mid    = values.Count / 2;
-    var gauche = DataSeries<T>.From(values.Take(mid));
-    var droite = DataSeries<T>.From(values.Skip(mid));
+    int mid   = values.Count / 2;
+    var left  = DataSeries<T>.From(values.Take(mid));
+    var right = DataSeries<T>.From(values.Skip(mid));
 
-    return gauche.Decompose(minSize).Concat(droite.Decompose(minSize));
+    return left.Decompose(minSize).Concat(right.Decompose(minSize));
 }
 ```
 
@@ -93,11 +95,11 @@ Prédire le résultat pour 8 éléments avec `minSize = 2` :
 </details>
 
 ```csharp
-var serie8    = DataSeries<double>.From(kdaLea.Values.Take(8));
-var souseries = serie8.Decompose(minSize: 2);
+var series8   = DataSeries<double>.From(kdaLea.Values.Take(8));
+var subSeries = series8.Decompose(minSize: 2);
 
-Console.WriteLine(souseries.Count()); // 4
-foreach (var s in souseries)
+Console.WriteLine(subSeries.Count()); // 4
+foreach (var s in subSeries)
     Console.WriteLine($"  [{string.Join(", ", s.Values.Select(v => v.ToString("F2")))}]");
 ```
 
@@ -106,17 +108,17 @@ foreach (var s in souseries)
 ## Étape 3 — Bracket de tournoi simplifié
 
 ```csharp
-var serie = DataSeries<double>.From(kdaLea.Smooth(1).Values.Take(8));
+var series = DataSeries<double>.From(kdaLea.Smooth(1).Values.Take(8));
 
 // Ronde 1 : 4 fenêtres de 2 matchs
-var ronde1 = serie.Decompose(2).Select(s => s.Statistics().Mean).ToList();
+var round1 = series.Decompose(2).Select(s => s.Statistics().Mean).ToList();
 Console.WriteLine("Ronde 1 (KDA moyen par paire) :");
-ronde1.ForEach(m => Console.WriteLine($"  {m:F2}"));
+round1.ForEach(m => Console.WriteLine($"  {m:F2}"));
 
 // Ronde 2 : combiner les paires en quarts
-var ronde2 = DataSeries<double>.From(ronde1).Decompose(1).Select(s => s.Statistics().Mean);
+var round2 = DataSeries<double>.From(round1).Decompose(1).Select(s => s.Statistics().Mean);
 Console.WriteLine("Ronde 2 (KDA moyen par quart) :");
-foreach (var m in ronde2) Console.WriteLine($"  {m:F2}");
+foreach (var m in round2) Console.WriteLine($"  {m:F2}");
 ```
 
 ---
@@ -141,13 +143,13 @@ dotnet run -- --bracket 8 --player Raphaël
 if (args.Contains("--bracket"))
 {
     int n = int.Parse(args[Array.IndexOf(args, "--bracket") + 1]);
-    var ronde = kdaLea
+    var round = kdaLea
         .Decompose(n / 4)
         .Select(s => s.Statistics().Mean)
         .ToList();
 
-    Console.WriteLine($"Bracket ({n} matchs, {ronde.Count} segments) :");
-    ronde.ForEach(m => Console.WriteLine($"  KDA moy : {m:F2}"));
+    Console.WriteLine($"Bracket ({n} matchs, {round.Count} segments) :");
+    round.ForEach(m => Console.WriteLine($"  KDA moy : {m:F2}"));
 }
 ```
 

@@ -2,6 +2,12 @@
 
 > Partie 4 — `.Fold()` + `.Statistics()` + `.SlidingWindow()`
 
+## Concepts théoriques
+
+- [Thématique 04 — Fold et agrégation](../../../thematiques/04-fold-agregation.md)
+- [Fold — l'agrégation universelle](../../../supports/source/04-Reduce.md#fold-—-l-agregation-universelle)
+- [GroupBy — agrégation par clé](../../../supports/source/04-Reduce.md#groupby)
+
 ## Contexte
 
 Établir le classement officiel des 5 joueurs de Team Helvetia pour la saison.
@@ -62,13 +68,13 @@ Réécrire les agrégations classiques avec `Fold` sur les KDA de Léa :
 ```csharp
 var kdaValues = kdaLea; // DataSeries<double>
 
-var somme   = kdaValues.Fold(0.0, (acc, val) => acc + val);
-var nb      = kdaValues.Fold(0,   (acc, _)   => acc + 1);
-var meilleur = kdaValues.Fold(double.MinValue, (acc, val) => val > acc ? val : acc);
+var sum   = kdaValues.Fold(0.0, (acc, val) => acc + val);
+var count = kdaValues.Fold(0,   (acc, _)   => acc + 1);
+var best  = kdaValues.Fold(double.MinValue, (acc, val) => val > acc ? val : acc);
 
-var moyenne = somme / nb;
-Console.WriteLine($"KDA moyen de Léa : {moyenne:F2}");
-Console.WriteLine($"KDA max de Léa   : {meilleur:F2}");
+var mean = sum / count;
+Console.WriteLine($"KDA moyen de Léa : {mean:F2}");
+Console.WriteLine($"KDA max de Léa   : {best:F2}");
 ```
 
 Reproduire pour les 4 autres joueurs et afficher le classement.
@@ -116,11 +122,11 @@ Calculer la moyenne KDA par fenêtre de 5 matchs pour Léa :
 ```csharp
 var progression = kdaLea
     .SlidingWindow(5)
-    .Select(fenetre => fenetre.Fold(0.0, (acc, v) => acc + v) / 5);
+    .Select(window => window.Fold(0.0, (acc, v) => acc + v) / 5);
 
 Console.WriteLine("Progression KDA Léa (fenêtres de 5 matchs) :");
-foreach (var moy in progression)
-    Console.WriteLine($"  {moy:F2}");
+foreach (var avg in progression)
+    Console.WriteLine($"  {avg:F2}");
 ```
 
 ---
@@ -128,14 +134,28 @@ foreach (var moy in progression)
 ## Étape 3 — `.Statistics()` — qui est le plus régulier ?
 
 ```csharp
-public record SeriesStats(double Min, double Max, double Mean, double StdDev);
+public class SeriesStats
+{
+    public double Min { get; }
+    public double Max { get; }
+    public double Mean { get; }
+    public double StdDev { get; }
+
+    public SeriesStats(double min, double max, double mean, double stdDev)
+    {
+        Min = min;
+        Max = max;
+        Mean = mean;
+        StdDev = stdDev;
+    }
+}
 
 public SeriesStats Statistics()
 {
     var values   = _data.Cast<double>().ToList();
     var mean     = // ...
     var variance = // ...
-    return new SeriesStats(Min: /* ... */, Max: /* ... */, Mean: mean, StdDev: /* ... */);
+    return new SeriesStats(min: /* ... */, max: /* ... */, mean: mean, stdDev: /* ... */);
 }
 ```
 
@@ -149,10 +169,10 @@ public SeriesStats Statistics()
     var mean     = values.Aggregate(0.0, (acc, v) => acc + v) / values.Count;
     var variance = values.Aggregate(0.0, (acc, v) => acc + Math.Pow(v - mean, 2)) / values.Count;
     return new SeriesStats(
-        Min:    values.Min(),
-        Max:    values.Max(),
-        Mean:   mean,
-        StdDev: Math.Sqrt(variance)
+        min:    values.Min(),
+        max:    values.Max(),
+        mean:   mean,
+        stdDev: Math.Sqrt(variance)
     );
 }
 ```
@@ -191,7 +211,7 @@ dotnet run -- --game valorant --player Léa --stat kda --window 3
 ```csharp
 if (args.Contains("--rank"))
 {
-    var joueurs = new[]
+    var players = new[]
     {
         ("Léa",     kdaLea.Fold(0.0,     (a, v) => a + v) / kdaLea.Count),
         ("Raphaël", kdaRaphael.Fold(0.0, (a, v) => a + v) / kdaRaphael.Count),
@@ -199,8 +219,8 @@ if (args.Contains("--rank"))
         ("Dylan",   kdaDylan.Fold(0.0,   (a, v) => a + v) / kdaDylan.Count),
         ("Kiara",   kdaKiara.Fold(0.0,   (a, v) => a + v) / kdaKiara.Count),
     };
-    foreach (var (nom, kda) in joueurs.OrderByDescending(j => j.Item2))
-        Console.WriteLine($"{nom,-10} KDA moy : {kda:F2}");
+    foreach (var (name, kda) in players.OrderByDescending(p => p.Item2))
+        Console.WriteLine($"{name,-10} KDA moy : {kda:F2}");
 }
 
 int window = args.Contains("--window")
@@ -209,6 +229,37 @@ int window = args.Contains("--window")
 ```
 
 </details>
+
+---
+
+## Étape bonus (avancé) — GroupBy
+
+> Étape optionnelle — pour aller plus loin.
+
+Le classement de l'étape 4 construit les moyennes joueur par joueur, à la main.
+`GroupBy` fait le partitionnement automatiquement : les stats **par joueur** en un seul pipeline.
+
+```csharp
+// Tous les matchs Valorant (Léa + Dylan) — stats par joueur en un pipeline
+var ranking = valorant.Values
+    .GroupBy(m => m.Player)
+    .Select(g => new
+    {
+        Player  = g.Key,
+        Matches = g.Count(),
+        AvgKda  = g.Aggregate(0.0, (acc, m) =>
+                      acc + (m.Kills + m.Assists) / (double)(m.Deaths == 0 ? 1 : m.Deaths))
+                  / g.Count()
+    })
+    .OrderByDescending(s => s.AvgKda);
+
+foreach (var s in ranking)
+    Console.WriteLine($"{s.Player,-10} {s.Matches} matchs — KDA moy : {s.AvgKda:F2}");
+```
+
+Le motif `GroupBy(clé).Select(g => g.Aggregate(...))` = partitionner, puis réduire chaque
+partition — un `Fold` par clé.
+→ [GroupBy — agréger par clé](../../../supports/source/04-Reduce.md#groupby)
 
 ---
 

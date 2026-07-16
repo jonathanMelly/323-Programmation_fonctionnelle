@@ -148,6 +148,36 @@ public void TestDifferentNumber()
 > Sans connaître le langage Cosmos, on comprend que ce teste vérifie la différence entre deux valeurs...
 > Derrière les décors, IsDifferentThan convertit cela en langage Cosmos...
 
+## Zip — combiner deux séquences en parallèle
+
+`Zip` apparie les éléments de deux séquences **position par position** — comme les dents
+d'une fermeture éclair :
+
+```csharp
+var dates = new[] { "01.03", "08.03", "15.03" };
+var kda   = new[] { 2.4, 3.1, 1.8, 2.9 };       // 4 valeurs !
+
+var timeline = dates.Zip(kda, (date, score) => $"{date} → KDA {score}");
+// { "01.03 → KDA 2.4", "08.03 → KDA 3.1", "15.03 → KDA 1.8" }
+```
+
+Deux propriétés à retenir :
+
+- **Appariement par position** — le 1er élément avec le 1er, le 2e avec le 2e, etc.
+  Aucune clé, aucun tri : seule la position compte.
+- **Arrêt sur la plus courte** — ici 3 dates pour 4 scores : le 4e score est ignoré
+  sans erreur. Le résultat a la longueur de la séquence la plus courte.
+
+Sans le combineur, `Zip` produit des tuples :
+
+```csharp
+var pairs = dates.Zip(kda); // IEnumerable<(string, double)>
+```
+
+`Zip` est le complément naturel des extensions fluentes : il permet de comparer deux séries
+côte à côte dans un pipeline (voir `PairWith` dans l'exercice 06 du fil rouge, ainsi que les
+exercices [events](../../exos/events/README.md) et [randoPureZip](../../exos/randoPureZip/README.md)).
+
 ## Composition de Fonctions (f ∘ g)
 
 La **composition de fonctions** est l'un des principes fondamentaux de la programmation

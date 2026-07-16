@@ -1,10 +1,13 @@
 # Exercice 07 — Audit sécurité
 
-> Partie 6 — Pureté + effets de bord + `.Snapshot()`
+> Partie 6 — Records + pureté + effets de bord + `.Snapshot()`
 
-**Concepts FP :** Pureté · Effets de bord · Transparence référentielle
-→ Théorie : [Pureté et immutabilité](../../../supports/source/06-PureteImmutabilite.md) ·
-[Transparence référentielle](../../../supports/source/06-PureteImmutabilite.md#transparence-referentielle)
+## Concepts théoriques
+
+- [Thématique 06 — Pureté et immutabilité](../../../thematiques/06-purete-immutabilite.md)
+- [Pureté et effets de bord](../../../supports/source/06-PureteImmutabilite.md)
+- [Records C# — l'immutabilité par défaut](../../../supports/source/06-PureteImmutabilite.md#records-c-—-l-immutabilite-par-defaut)
+- [Transparence référentielle](../../../supports/source/06-PureteImmutabilite.md#transparence-referentielle)
 
 ## Contexte
 
@@ -14,7 +17,62 @@ est un risque pour la fiabilité des analyses — un bug silencieux peut fausser
 
 ---
 
-## Étape 1 — Tableau d'audit
+## Étape 1 — Convertir les classes en records
+
+Depuis l'exercice 01, les modèles sont des classes immuables : propriétés get-only,
+constructeur qui recopie chaque paramètre. Verbeux — et "modifier" un objet oblige
+à le reconstruire entièrement à la main.
+
+**Avant de coder :** combien de lignes fait `ValorantMatch` en classe ? Combien en record ?
+
+<details>
+<summary>Voir la conversion</summary>
+
+```csharp
+// Avant — classe immuable (~25 lignes)
+public class ValorantMatch
+{
+    public string Player { get; }
+    public string Agent { get; }
+    // ... 6 autres propriétés + constructeur de 10 lignes
+}
+
+// Après — record (1 ligne, même immutabilité, même comportement)
+public record ValorantMatch(
+    string Player, string Agent, int Kills, int Deaths,
+    int Assists, int Headshots, int RoundsWon, bool Won);
+```
+
+</details>
+
+Convertir `DataPoint<T>`, `ValorantMatch`, `Cs2Match`, `LolMatch` et `SeriesStats` en records :
+
+```csharp
+public record DataPoint<T>(DateTime Timestamp, T Value);
+public record SeriesStats(double Min, double Max, double Mean, double StdDev);
+// ... etc.
+```
+
+Le record apporte en plus l'expression `with` — la "modification" fonctionnelle
+que la classe rendait pénible :
+
+```csharp
+var match = new ValorantMatch("Léa", "Jett", 18, 6, 4, 8, 13, true);
+// match.Kills = 20; // toujours une erreur de compilation — c'est voulu !
+var corrected = match with { Kills = 20 }; // nouvel objet, l'original reste intact
+```
+
+Et l'égalité par valeur : deux records aux mêmes valeurs sont égaux (`==`),
+là où deux instances de classe ne le sont pas.
+
+→ [Records C# — l'immutabilité par défaut](../../../supports/source/06-PureteImmutabilite.md#records-c-—-l-immutabilite-par-defaut)
+
+> Vérifier que les parsers et générateurs des exercices précédents compilent toujours —
+> la conversion est transparente pour le reste du code.
+
+---
+
+## Étape 2 — Tableau d'audit
 
 Trois questions pour chaque méthode :
 
@@ -59,7 +117,7 @@ Remplir le tableau pour chaque méthode de `DataSeries<T>` :
 
 ---
 
-## Étape 2 — Identifier et corriger une méthode impure
+## Étape 3 — Identifier et corriger une méthode impure
 
 Voici une version impure de `Smooth` introduite par erreur :
 
@@ -107,7 +165,7 @@ public DataSeries<T> LogAndFilter(Func<T, bool> predicate)
 
 ---
 
-## Étape 3 — `.Snapshot()` et l'importance de `ToList()`
+## Étape 4 — `.Snapshot()` et l'importance de `ToList()`
 
 La bibliothèque repose sur des pipelines paresseux (exercice 03). Que se passe-t-il si deux
 consommateurs matérialisent la même query à des moments différents, alors que la source
@@ -140,7 +198,7 @@ Console.WriteLine(series.Count); // 3 — snapshot isolé de la source
 
 ---
 
-## Étape 4 — Interface CLI
+## Étape 5 — Interface CLI
 
 Ajouter `--audit` pour afficher le rapport de pureté de la bibliothèque dans la console.
 
@@ -161,7 +219,7 @@ if (args.Contains("--audit"))
     Console.WriteLine($"{"Méthode",-25} {"Déterministe",-15} {"Sans effet",-12} Pure");
     Console.WriteLine(new string('-', 60));
 
-    var lignes = new[]
+    var rows = new[]
     {
         ("From(source)",          "oui", "oui",  "oui"),
         ("FromCsv(path,parser)",  "oui", "non",  "non"),
@@ -173,7 +231,7 @@ if (args.Contains("--audit"))
         ("Normalize()",           "oui", "oui",  "oui"),
         ("Smooth(windowSize)",    "oui", "oui",  "oui"),
     };
-    foreach (var (m, d, e, p) in lignes)
+    foreach (var (m, d, e, p) in rows)
         Console.WriteLine($"{m,-25} {d,-15} {e,-12} {p}");
 
     Console.WriteLine("* dépend de la pureté de la fonction passée en argument");
@@ -192,6 +250,7 @@ if (args.Contains("--audit"))
 
 ## Vérification
 
+- Les modèles sont des records — `with` fonctionne, la mutation directe reste impossible
 - Le tableau d'audit est complété — `FromCsv` identifiée comme impure
 - `SmoothImpure` corrigée : mêmes entrées → même sortie, aucun état global modifié
 - `Snapshot()` isole la série de la source

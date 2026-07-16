@@ -10,6 +10,7 @@
 **Particularités utiles pour les activités**
 
 - [Fold — l'Agrégation Universelle](../supports/source/04-Reduce.md#fold-—-l-agregation-universelle)
+- [GroupBy — agréger par clé](../supports/source/04-Reduce.md#groupby) (pour l'étape bonus)
 
 ## Activités
 
@@ -17,7 +18,7 @@ Répondre aux besoins du fil rouge en enrichissant la bibliothèque `DataSeries<
 
 ### Fil rouge
 
-- [05-stats — Classement de saison](../exos/fil-rouge/esport/05-stats/) — établir le classement des joueurs et analyser leur progression — en enrichissant la bibliothèque
+- [05-classement-fold — Classement de saison](../exos/fil-rouge/esport/05-classement-fold/) — établir le classement des joueurs et analyser leur progression — en enrichissant la bibliothèque (étape bonus : `GroupBy`)
 
 ### Exercices complémentaires
 

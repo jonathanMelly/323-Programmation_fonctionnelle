@@ -100,6 +100,54 @@ Ce qui est immutable, c'est l'adresse de la liste en mémoire. Il n'est donc pas
 items = new List<int>();
 ```
 
+### Records C# — l'immutabilité par défaut
+
+Écrire une classe immuable à la main est verbeux : propriétés get-only, constructeur
+qui recopie chaque paramètre...
+
+```csharp
+// Classe immuable — ~15 lignes de plomberie
+public class Point
+{
+    public double X { get; }
+    public double Y { get; }
+
+    public Point(double x, double y)
+    {
+        X = x;
+        Y = y;
+    }
+}
+```
+
+Le mot-clé `record` (C# 9) génère tout cela en une ligne :
+
+```csharp
+public record Point(double X, double Y);
+```
+
+Le record offre en plus :
+
+- **La "modification" fonctionnelle avec `with`** — au lieu de reconstruire l'objet entier
+  à la main, `with` crée une copie en ne changeant que les propriétés indiquées :
+
+  ```csharp
+  var p1 = new Point(1.0, 2.0);
+  // p1.X = 5.0;                 // Erreur de compilation — immuable
+  var p2 = p1 with { X = 5.0 };  // Nouvel objet (5.0, 2.0) — p1 reste intact
+  ```
+
+- **L'égalité par valeur** — deux records aux mêmes valeurs sont égaux, là où deux
+  instances de classe sont comparées par référence :
+
+  ```csharp
+  Console.WriteLine(new Point(1, 2) == new Point(1, 2)); // true pour un record
+                                                          // false pour une classe
+  ```
+
+Le record est ainsi l'outil C# idiomatique pour modéliser des **données immuables** —
+exactement ce dont un pipeline fonctionnel a besoin.
+
 ### Parallèlisation
 L’immutabilité est une aussi un moyen de *rendre obsolète* les mécanismes de `Lock` dans un cadre *multi-thread* et ainsi éviter les `deadlock` qui peuvent paralyser tout un système de par leur nature non mutable...
 

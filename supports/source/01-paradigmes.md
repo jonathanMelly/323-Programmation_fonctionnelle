@@ -155,6 +155,46 @@ var result = numbers.Where(n => n % 2 == 0);
 > LINQ n’est pas le but — c’est l’outil. Le vrai but est d’apprendre à *penser* de manière
 > déclarative : décrire la transformation souhaitée, pas les étapes pour y arriver.
 
+## Et le compilateur dans tout ça ?
+
+Une question légitime : si l’on *décrit* ce que l’on veut sans donner les étapes, qui génère
+les étapes ? La réponse : **le compilateur**, et derrière lui le processeur — qui, lui, ne
+connaît que des sauts (`jmp`), des comparaisons et des registres.
+
+Le code C# déclaratif suivant :
+
+```csharp
+var evens = numbers.Where(n => n % 2 == 0).ToList();
+```
+
+est compilé en **IL** (Intermediate Language), puis traduit à l’exécution par le JIT en
+instructions machine — exactement des boucles, des tests et des sauts, comme si on les avait
+écrits à la main en impératif.
+
+```
+; Assembleur x86-64 simplifié — ce que le CPU exécute réellement
+.loop:
+    mov   eax, [rsi]     ; charger l’élément courant
+    and   eax, 1         ; tester le bit de parité
+    jnz   .skip          ; impair → sauter
+    call  List.Add       ; pair   → ajouter à la liste
+.skip:
+    add   rsi, 4         ; avancer au prochain élément
+    cmp   rsi, rbx       ; fin de liste ?
+    jl    .loop          ; non → recommencer
+```
+
+**La déclarativité est une abstraction** : elle déplace la responsabilité du *comment* du
+développeur vers le compilateur. Le CPU reste impératif — mais ce n’est plus votre problème.
+
+C’est exactement le même principe qu’une requête SQL : écrire `SELECT * FROM matches WHERE won = 1`
+ne dit pas comment parcourir les données — le moteur de base de données génère le plan
+d’exécution optimal (index, tri, parallélisme) à votre place.
+
+> Plus le niveau d’abstraction est élevé, plus le compilateur a de liberté pour optimiser.
+> `numbers.Where(...).Select(...).OrderBy(...)` permet au JIT de fusionner les passes,
+> réordonner les opérations ou les paralléliser — ce qu’une boucle manuelle ne permettrait pas.
+
 ## Les autres
 D’autres étiquettes existent pour décrire des manières de programmer, on trouve notamment:
 

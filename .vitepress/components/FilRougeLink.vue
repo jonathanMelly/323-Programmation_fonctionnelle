@@ -10,9 +10,15 @@ const props = defineProps<{
 
 const { active } = useFilRouge()
 const href = computed(() => {
-  let ex = props.ex.endsWith('/') ? props.ex + 'README' : props.ex
+  // Paths ending with README.md are directory indexes — strip to get a clean dir path
+  let ex = props.ex.replace(/\/?README\.md$/, '')
+  // Strip .md extension from other markdown links
   ex = ex.replace(/\.md$/, '')
-  return withBase(`/exos/fil-rouge/${active.value}/${ex}`)
+  // Files (with extension) keep their path; directories get a trailing slash
+  const isFile = /\.[^/]+$/.test(ex)
+  return withBase(ex
+    ? `/exos/fil-rouge/${active.value}/${ex}${isFile ? '' : '/'}`
+    : `/exos/fil-rouge/${active.value}/`)
 })
 </script>
 

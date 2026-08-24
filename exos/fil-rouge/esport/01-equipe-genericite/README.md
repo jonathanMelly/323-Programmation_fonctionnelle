@@ -172,6 +172,37 @@ public class DataSeries<T>
 
 </details>
 
+> **Constructeur privé + `From` — pourquoi ce choix ?**
+>
+> Le constructeur est `private` : on ne peut pas écrire `new DataSeries<T>(...)` de l'extérieur.
+> La seule entrée est la méthode statique nommée `From`.
+>
+> | Avantages | Inconvénients |
+> |-----------|---------------|
+> | Le nom exprime l'intention (`From` = "construire depuis une source") | Inhabituel pour un débutant — le constructeur privé surprend |
+> | Cohérence avec `FromCsv` (exercice 02) : même API, deux origines | Un niveau d'indirection supplémentaire sans gain immédiat ici |
+> | Contrôle total sur la construction (validation, sous-types futurs) | |
+>
+> **Alternative plus simple** — constructeur public, pas de factory :
+>
+> ```csharp
+> public class DataSeries<T>
+> {
+>     private readonly IEnumerable<T> _data;
+>
+>     public DataSeries(IEnumerable<T> data) => _data = data;
+>
+>     public int Count => _data.Count();
+>     public IEnumerable<T> Values => _data;
+> }
+>
+> // Utilisation :
+> var valorant = new DataSeries<ValorantMatch>(valorantMatches);
+> ```
+>
+> Les deux approches sont valides. Le constructeur privé + `From` sera maintenu dans le fil rouge
+> pour la cohérence avec `FromCsv`, mais passer par un constructeur public est tout à fait acceptable.
+
 Vérifier avec trois matchs en dur :
 
 ```csharp
@@ -199,7 +230,7 @@ Faut-il écrire un `DataSeriesCs2` et un `DataSeriesLol` ?
 
 Non — `DataSeries<T>` est **générique** : il ignore tout du contenu de `T`.
 Il suffit de définir les classes du domaine (`Cs2Match`, `LolMatch`) dans `EsportApp`
-et de réutiliser le même `From`.
+et de (ré)utiliser `From`.
 → [Généricité — abstraire les types](../../../../supports/source/01b-genericite.md)
 
 </details>

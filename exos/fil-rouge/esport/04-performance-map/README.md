@@ -5,9 +5,9 @@
 ## Concepts théoriques
 
 - [Thématique 03 — Map et transformation](../../../thematiques/03-map-transformation.md)
-- [Map / Select](../../../supports/source/03-Map.md)
-- [Composition de pipelines](../../../supports/source/03-Map.md#composition-de-pipelines)
-- [Closures dans les transformations](../../../supports/source/03-Map.md#closures-dans-les-transformations)
+- [Map / Select](../../../../supports/source/03-Map.md)
+- [Composition de pipelines](../../../../supports/source/03-Map.md#composition-de-pipelines)
+- [Closures dans les transformations](../../../../supports/source/03-Map.md#closures-dans-les-transformations)
 
 ## Contexte
 
@@ -79,7 +79,7 @@ Reproduire pour CS2 (Raphaël, Kiara) et LoL (Noé).
 
 > Le chaînage `Filter(...).Transform(...)` est possible *uniquement* parce que chaque méthode
 > retourne un *nouvel* objet au lieu de modifier la source. Immutabilité → composition.
-> → [Composition de pipelines](../../../supports/source/03-Map.md#composition-de-pipelines)
+> → [Composition de pipelines](../../../../supports/source/03-Map.md#composition-de-pipelines)
 
 ---
 
@@ -149,7 +149,7 @@ utilise les éléments aux indices `[i-w+1 .. i]`. Comment générer tous les in
 `Enumerable.Range(0, values.Count)` génère tous les indices.
 Pour chaque indice `i`, prendre `values.Skip(Max(0, i - w + 1)).Take(w)` puis `.Average()`.
 La variable `windowSize` capturée par le lambda est une **closure** — observer ce que ça implique.
-→ [Closures dans les transformations](../../../supports/source/03-Map.md#closures-dans-les-transformations)
+→ [Closures dans les transformations](../../../../supports/source/03-Map.md#closures-dans-les-transformations)
 
 </details>
 
@@ -200,7 +200,7 @@ window = 10; // Sans effet — window a été copiée à l'appel de Smooth (pass
 > sa modification ultérieure serait visible. Ici `window` n'est pas capturée : elle est
 > passée en argument à `Smooth`, donc copiée. C'est `windowSize` (le paramètre) que le
 > lambda capture, et il ne change plus.
-> → [Closures](../../../supports/source/02a-fonctions-sup.md#closures-captures-de-variables)
+> → [Closures](../../../../supports/source/02a-fonctions-sup.md#closures-captures-de-variables)
 
 ---
 
@@ -217,7 +217,7 @@ que permet un **dictionnaire de fonctions** ? Que faire si la valeur passée est
 
 Comme la table de prédicats de l'exercice 03 : un sélecteur `Func<ValorantMatch, double>`
 est une valeur — il peut être stocké dans un `Dictionary` et choisi à l'exécution.
-→ [Fonctions comme valeurs](../../../supports/source/02a-fonctions-sup.md)
+→ [Fonctions comme valeurs](../../../../supports/source/02a-fonctions-sup.md)
 
 </details>
 
@@ -268,7 +268,7 @@ var allKda = allSeries.SelectMany(s => s.Values);
 Console.WriteLine($"KDA de l'équipe entière : {allKda.Count()} valeurs");
 ```
 
-→ [SelectMany — le flatMap](../../../supports/source/03-Map.md#selectmany-—-le-flatmap)
+→ [SelectMany — le flatMap](../../../../supports/source/03-Map.md#selectmany-—-le-flatmap)
 
 ---
 

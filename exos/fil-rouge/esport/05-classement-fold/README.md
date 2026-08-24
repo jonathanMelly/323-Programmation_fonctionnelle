@@ -5,8 +5,8 @@
 ## Concepts théoriques
 
 - [Thématique 04 — Fold et agrégation](../../../thematiques/04-fold-agregation.md)
-- [Fold — l'agrégation universelle](../../../supports/source/04-Reduce.md#fold-—-l-agregation-universelle)
-- [GroupBy — agrégation par clé](../../../supports/source/04-Reduce.md#groupby)
+- [Fold — l'agrégation universelle](../../../../supports/source/04-Reduce.md#fold-—-l-agregation-universelle)
+- [GroupBy — agrégation par clé](../../../../supports/source/04-Reduce.md#groupby)
 
 ## Contexte
 
@@ -28,8 +28,8 @@ Implémenter `Fold` une seule fois suffit à exprimer n'importe quelle agrégati
 s → f(s, a) → f(f(s,a), b) → f(f(f(s,a),b), c) → résultat final
 ```
 
-→ Théorie : [Reduce / Aggregate](../../../supports/source/04-Reduce.md) ·
-[Fold — l'agrégation universelle](../../../supports/source/04-Reduce.md#fold-—-l-agregation-universelle)
+→ Théorie : [Reduce / Aggregate](../../../../supports/source/04-Reduce.md) ·
+[Fold — l'agrégation universelle](../../../../supports/source/04-Reduce.md#fold-—-l-agregation-universelle)
 
 ---
 
@@ -259,7 +259,7 @@ foreach (var s in ranking)
 
 Le motif `GroupBy(clé).Select(g => g.Aggregate(...))` = partitionner, puis réduire chaque
 partition — un `Fold` par clé.
-→ [GroupBy — agréger par clé](../../../supports/source/04-Reduce.md#groupby)
+→ [GroupBy — agréger par clé](../../../../supports/source/04-Reduce.md#groupby)
 
 ---
 

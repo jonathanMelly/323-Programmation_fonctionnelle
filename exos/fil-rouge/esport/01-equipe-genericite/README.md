@@ -5,8 +5,8 @@
 ## Concepts théoriques
 
 - [Thématique 01 — Paradigmes fonctionnels](../../../thematiques/01-paradigmes-fonctionnels.md)
-- [Impératif ou déclaratif](../../../supports/source/01-paradigmes.md#imperatif-ou-declaratif)
-- [Généricité — abstraire les types](../../../supports/source/01b-genericite.md)
+- [Impératif ou déclaratif](../../../../supports/source/01-paradigmes.md#imperatif-ou-declaratif)
+- [Généricité — abstraire les types](../../../../supports/source/01b-genericite.md)
 - Immutabilité (propriétés get-only) — introduction, approfondie en exercice 07
 
 ## Contexte
@@ -200,7 +200,7 @@ Faut-il écrire un `DataSeriesCs2` et un `DataSeriesLol` ?
 Non — `DataSeries<T>` est **générique** : il ignore tout du contenu de `T`.
 Il suffit de définir les classes du domaine (`Cs2Match`, `LolMatch`) dans `EsportApp`
 et de réutiliser le même `From`.
-→ [Généricité — abstraire les types](../../../supports/source/01b-genericite.md)
+→ [Généricité — abstraire les types](../../../../supports/source/01b-genericite.md)
 
 </details>
 
@@ -267,7 +267,7 @@ Console.WriteLine($"Victoires de Léa : {wins.Count()}"); // 2
 ```
 
 Cette requête est déclarative : elle exprime QUOI faire — pas de boucle, pas de variable muable.
-→ [Déclaratif vs Impératif — avec LINQ](../../../supports/source/01-paradigmes.md#declaratif-vs-imperatif-—-avec-linq)
+→ [Déclaratif vs Impératif — avec LINQ](../../../../supports/source/01-paradigmes.md#declaratif-vs-imperatif-—-avec-linq)
 
 ---
 

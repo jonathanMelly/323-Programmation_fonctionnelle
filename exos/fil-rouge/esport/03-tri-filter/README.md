@@ -5,10 +5,10 @@
 ## Concepts théoriques
 
 - [Thématique 02 — Filter et fonctions d'ordre supérieur](../../../thematiques/02-filter-fonctions-sup.md)
-- [Fonctions d'ordre supérieur](../../../supports/source/02a-fonctions-sup.md)
-- [Filter et prédicats](../../../supports/source/02b-filter.md)
-- [Closures](../../../supports/source/02a-fonctions-sup.md#closures-captures-de-variables)
-- [Évaluation paresseuse](../../../supports/source/02b-filter.md#evaluation-paresseuse-deferred-execution)
+- [Fonctions d'ordre supérieur](../../../../supports/source/02a-fonctions-sup.md)
+- [Filter et prédicats](../../../../supports/source/02b-filter.md)
+- [Closures](../../../../supports/source/02a-fonctions-sup.md#closures-captures-de-variables)
+- [Évaluation paresseuse](../../../../supports/source/02b-filter.md#evaluation-paresseuse-deferred-execution)
 
 ## Contexte
 
@@ -73,7 +73,7 @@ var top = valorant.Filter(isCrushingWin);
 ```
 
 Une fonction stockée dans une variable se passe, se combine, se réutilise —
-→ [Fonctions comme valeurs](../../../supports/source/02a-fonctions-sup.md)
+→ [Fonctions comme valeurs](../../../../supports/source/02a-fonctions-sup.md)
 
 ---
 
@@ -173,7 +173,7 @@ Console.WriteLine(lolValid.AllMatch(m => m.Deaths >= 1));
 // → Tous les matchs de Noé ont-ils au moins 1 mort ?
 ```
 
-→ Théorie : [Any et All — prédicats HOF](../../../supports/source/02b-filter.md#any-et-all-—-predicats-hof-booleens)
+→ Théorie : [Any et All — prédicats HOF](../../../../supports/source/02b-filter.md#any-et-all-—-predicats-hof-booleens)
 
 ---
 

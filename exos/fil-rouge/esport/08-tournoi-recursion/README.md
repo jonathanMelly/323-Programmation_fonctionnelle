@@ -5,8 +5,8 @@
 ## Concepts théoriques
 
 - [Thématique 08 — Récursivité](../../../thematiques/08-recursion.md)
-- [Récursivité — décomposition fonctionnelle](../../../supports/source/08-Recursivite.md)
-- [Récursion et Fold](../../../supports/source/08-Recursivite.md#recursion-et-fold)
+- [Récursivité — décomposition fonctionnelle](../../../../supports/source/08-Recursivite.md)
+- [Récursion et Fold](../../../../supports/source/08-Recursivite.md#recursion-et-fold)
 
 ## Contexte
 
@@ -26,7 +26,7 @@ Tout algorithme récursif suit le même schéma :
 2. **Règle de combinaison** : résoudre en combinant des solutions plus petites
 
 Que se passerait-il sans le cas de base ?
-→ [Récursion et programmation fonctionnelle](../../../supports/source/08-Recursivite.md#recursion-et-programmation-fonctionnelle)
+→ [Récursion et programmation fonctionnelle](../../../../supports/source/08-Recursivite.md#recursion-et-programmation-fonctionnelle)
 
 ---
 
@@ -71,7 +71,7 @@ public IEnumerable<DataSeries<T>> Decompose(int minSize)
 
 > La récursion et `Aggregate` (Fold, exercice 05) sont les deux faces de la même pièce :
 > `Aggregate` *est* la récursion, généralisée et rendue itérative pour éviter les stack overflows.
-> → [Récursion et Fold](../../../supports/source/08-Recursivite.md#recursion-et-fold)
+> → [Récursion et Fold](../../../../supports/source/08-Recursivite.md#recursion-et-fold)
 
 ---
 

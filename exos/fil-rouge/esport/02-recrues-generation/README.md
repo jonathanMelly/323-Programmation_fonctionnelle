@@ -5,9 +5,9 @@
 ## Concepts théoriques
 
 - [Thématique 02 — Filter et fonctions d'ordre supérieur](../../../thematiques/02-filter-fonctions-sup.md)
-- [Fonctions d'ordre supérieur](../../../supports/source/02a-fonctions-sup.md)
-- [Closures](../../../supports/source/02a-fonctions-sup.md#closures-captures-de-variables)
-- [Évaluation paresseuse](../../../supports/source/02b-filter.md#evaluation-paresseuse-deferred-execution)
+- [Fonctions d'ordre supérieur](../../../../supports/source/02a-fonctions-sup.md)
+- [Closures](../../../../supports/source/02a-fonctions-sup.md#closures-captures-de-variables)
+- [Évaluation paresseuse](../../../../supports/source/02b-filter.md#evaluation-paresseuse-deferred-execution)
 
 ## Contexte
 
@@ -32,7 +32,7 @@ Quel paramètre permet de déléguer la logique de parsing à l'appelant ?
 
 Le parser est une fonction `Func<string[], T>` — elle reçoit les colonnes d'une ligne CSV
 et retourne un objet du type souhaité. `FromCsv` reste générique, le domaine reste dans `EsportApp`.
-→ [Func et Action](../../../supports/source/02a-fonctions-sup.md)
+→ [Func et Action](../../../../supports/source/02a-fonctions-sup.md)
 
 </details>
 
@@ -190,7 +190,7 @@ public static class MatchGenerator
 
 > La lambda passée à `Select` utilise `rng`, `maps` et `sides` déclarés *en dehors* d'elle :
 > c'est une **closure** — la fonction capture les variables de son environnement.
-> → [Closures](../../../supports/source/02a-fonctions-sup.md#closures-captures-de-variables)
+> → [Closures](../../../../supports/source/02a-fonctions-sup.md#closures-captures-de-variables)
 
 <details>
 <summary>Voir la solution complète</summary>

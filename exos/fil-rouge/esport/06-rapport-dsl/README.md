@@ -5,10 +5,10 @@
 ## Concepts théoriques
 
 - [Thématique 05 — Extensions et DSL fluent](../../../thematiques/05-extensions-dsl.md)
-- [Méthodes d'extension et chaînage](../../../supports/source/05-Extension.md)
-- [Composition de fonctions f ∘ g](../../../supports/source/05-Extension.md#composition-de-fonctions-f-∘-g)
-- [DSL — Domain Specific Language](../../../supports/source/05-Extension.md#dsl-domain-specific-language)
-- [Zip — combiner deux séquences en parallèle](../../../supports/source/05-Extension.md#zip-—-combiner-deux-sequences-en-parallele)
+- [Méthodes d'extension et chaînage](../../../../supports/source/05-Extension.md)
+- [Composition de fonctions f ∘ g](../../../../supports/source/05-Extension.md#composition-de-fonctions-f-∘-g)
+- [DSL — Domain Specific Language](../../../../supports/source/05-Extension.md#dsl-domain-specific-language)
+- [Zip — combiner deux séquences en parallèle](../../../../supports/source/05-Extension.md#zip-—-combiner-deux-sequences-en-parallele)
 
 ## Contexte
 
@@ -36,7 +36,7 @@ kdaLea
 
 Le contrat de la composition : chaque méthode retourne le même type qu'elle reçoit
 (ou un type compatible). C'est ce qui permet `x.g().f()` — l'équivalent C# de `(f ∘ g)(x)`.
-→ [Le contrat de la composition](../../../supports/source/05-Extension.md#le-contrat-de-la-composition)
+→ [Le contrat de la composition](../../../../supports/source/05-Extension.md#le-contrat-de-la-composition)
 
 </details>
 
@@ -101,7 +101,7 @@ public static DataSeries<T> WithFallback<T>(
 
 `Zip` (ici `PairWith`) combine deux listes élément par élément — pattern fondamental pour
 traiter des séries corrélées (kills + assists, température + humidité...).
-→ [Zip — combiner deux séquences en parallèle](../../../supports/source/05-Extension.md#zip-—-combiner-deux-sequences-en-parallele)
+→ [Zip — combiner deux séquences en parallèle](../../../../supports/source/05-Extension.md#zip-—-combiner-deux-sequences-en-parallele)
 
 ```csharp
 public static DataSeries<(double Left, double Right)> PairWith(
@@ -142,7 +142,7 @@ foreach (var (k, a) in report.Values)
 
 Les extensions définissent le vocabulaire du domaine. Un bon DSL se lit sans avoir besoin
 de connaître l'implémentation :
-→ [DSL](../../../supports/source/05-Extension.md#dsl-domain-specific-language)
+→ [DSL](../../../../supports/source/05-Extension.md#dsl-domain-specific-language)
 
 ```csharp
 valorant
@@ -169,8 +169,8 @@ prepare(kdaRaphael).ToCsv("raphael_kda.csv");
 ```
 
 Composer deux pipelines stockés donne un nouveau pipeline — c'est exactement `f ∘ g` :
-→ [Composition explicite avec Func](../../../supports/source/05-Extension.md#composition-explicite-avec-func) ·
-[Fonctions comme valeurs](../../../supports/source/02a-fonctions-sup.md)
+→ [Composition explicite avec Func](../../../../supports/source/05-Extension.md#composition-explicite-avec-func) ·
+[Fonctions comme valeurs](../../../../supports/source/02a-fonctions-sup.md)
 
 ---
 

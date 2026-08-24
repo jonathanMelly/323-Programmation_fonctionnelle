@@ -5,9 +5,9 @@
 ## Concepts théoriques
 
 - [Thématique 06 — Pureté et immutabilité](../../../thematiques/06-purete-immutabilite.md)
-- [Pureté et effets de bord](../../../supports/source/06-PureteImmutabilite.md)
-- [Records C# — l'immutabilité par défaut](../../../supports/source/06-PureteImmutabilite.md#records-c-—-l-immutabilite-par-defaut)
-- [Transparence référentielle](../../../supports/source/06-PureteImmutabilite.md#transparence-referentielle)
+- [Pureté et effets de bord](../../../../supports/source/06-PureteImmutabilite.md)
+- [Records C# — l'immutabilité par défaut](../../../../supports/source/06-PureteImmutabilite.md#records-c-—-l-immutabilite-par-defaut)
+- [Transparence référentielle](../../../../supports/source/06-PureteImmutabilite.md#transparence-referentielle)
 
 ## Contexte
 
@@ -65,7 +65,7 @@ var corrected = match with { Kills = 20 }; // nouvel objet, l'original reste int
 Et l'égalité par valeur : deux records aux mêmes valeurs sont égaux (`==`),
 là où deux instances de classe ne le sont pas.
 
-→ [Records C# — l'immutabilité par défaut](../../../supports/source/06-PureteImmutabilite.md#records-c-—-l-immutabilite-par-defaut)
+→ [Records C# — l'immutabilité par défaut](../../../../supports/source/06-PureteImmutabilite.md#records-c-—-l-immutabilite-par-defaut)
 
 > Vérifier que les parsers et générateurs des exercices précédents compilent toujours —
 > la conversion est transparente pour le reste du code.
@@ -80,7 +80,7 @@ Trois questions pour chaque méthode :
 2. **Sans effets de bord ?** Modifie-t-elle quoi que ce soit en dehors de son scope ?
 3. **Transparence référentielle ?** Peut-on remplacer l'appel par son résultat sans changer le comportement ?
 
-→ [Pureté](../../../supports/source/06-PureteImmutabilite.md#purete)
+→ [Pureté](../../../../supports/source/06-PureteImmutabilite.md#purete)
 
 Remplir le tableau pour chaque méthode de `DataSeries<T>` :
 
@@ -246,7 +246,7 @@ if (args.Contains("--audit"))
 > **Pourquoi la pureté est précieuse.** **Testable** — pas de mock, pas d'état à préparer.
 > **Composable** — si `f` et `g` sont pures, `f(g(x))` l'est aussi. **Parallélisable** —
 > sans état partagé, pas de race conditions.
-> → [Pourquoi la pureté est précieuse](../../../supports/source/06-PureteImmutabilite.md#pourquoi-la-purete-est-precieuse)
+> → [Pourquoi la pureté est précieuse](../../../../supports/source/06-PureteImmutabilite.md#pourquoi-la-purete-est-precieuse)
 
 ## Vérification
 

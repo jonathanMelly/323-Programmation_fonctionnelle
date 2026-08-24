@@ -51,9 +51,9 @@ const filRougesData = existsSync('exos/fil-rouge')
         const base = `exos/fil-rouge/${id}`
         const subdirs = readdirSync(base).filter(d => statSync(`${base}/${d}`).isDirectory())
 
-        // Dirs without README.md or index.md are data dirs — auto-generate a download page
+        // Dirs without README.md are data dirs — auto-generate (or refresh) a download page
         const dataDirs = subdirs
-          .filter(d => !existsSync(`${base}/${d}/README.md`) && !existsSync(`${base}/${d}/index.md`))
+          .filter(d => !existsSync(`${base}/${d}/README.md`))
           .map(d => ({ name: d, files: readdirSync(`${base}/${d}`).filter(f => statSync(`${base}/${d}/${f}`).isFile()) }))
           .filter(({ files }) => files.length > 0)
 

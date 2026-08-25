@@ -1,18 +1,27 @@
-| activité   | act,fun | where | take... | dist.,union | rev. | order | select | group | join | zip,conc... | range... | aggr. | sum... | ToList... | Rec. | Imm. |
-| ---------- | ------- | ----- | ------- | ----------- | ---- | ----- | ------ | ----- | ---- | ----------- | -------- | ----- | ------ | --------- | ---- | ---- |
-| marché     |         | x     |         |             |      |       |        |       |      |             |          |       |        |           |      |      |
-| ncdu       |         | x     |         |             |      |       |        |       |      |             |          |       |        | x         |      |      |
-| words      | x       | x     | x       |             | x    | x     | x      | x     | x    |             |          |       |        | x         |      |      |
-| cinema     | x       | x     | x       |             |      |       | x      |       |      |             |          |       |        | x         |      |      |
-| hardware   | x       | x     |         |             |      | x     |        |       |      |             |          |       |        | x         |      |      |
-| mib-map    | x       | x     |         |             |      |       | x      |       |      |             |          |       |        | x         |      |      |
-| rando      |         |       |         |             |      |       | x      |       |      | x           |          | x     | x      | x         | x    |      |
-| mib-reduce |         |       |         |             |      |       |        |       |      |             |          | x     | x      |           |      |      |
-| swapi x    | x       | x     | x       | x           | x    | x     | x      | x     | x    |             | x        | x     | x      | x         |      |      |
-| randoPure  | x       | x     |         |             |      |       |        |       |      | x           |          | x     | x      | x         |      |      |
-| immutable  |         |       |         |             |      |       |        |       |      |             |          |       |        |           |      | x    |
-| filecount  | x       | x     | x       | x           | x    | x     |        |       |      |             |          |       |        | x         | x    |      |
-| silkroad   |         |       |         |             |      |       |        |       |      |             |          |       |        |           | x    |      |
-| running #6 | x       | x     |         |             |      |       | x      |       |      |             |          |       |        |           |      |      |
-| fractale   |         |       |         |             |      |       |        |       |      |             |          |       |        |           | x    |      |
-| linqorne   | x       | x     | x       |             |      | x     | x      | x     |      |             | x        |       |        |           |      |      |
+Chaque ligne correspond à un exercice du dossier `exos`, chaque colonne à un des thèmes du [parcours du module](https//roadmap.sh/r/embed?id=66b88565b64402e0526d8ebc). Une case est cochée si l'exercice adresse ce thème.
+
+| Exercice     | Filtrer | Trouver | Transformer | Réduire | Classes ext. | Immutabilité | Fonctions pures | Récursivité |
+| ------------ | ------- | ------- | ----------- | ------- | ------------ | ------------ | --------------- | ----------- |
+| marché       | ✅      |         |             | ✅      |              |              |                 |             |
+| hardware     | ✅      |         | ✅          |         |              |              |                 |             |
+| cinema       | ✅      |         |             |         |              |              |                 |             |
+| words        | ✅      | ✅      | ✅          |         |              |              |                 |             |
+| rando        |         |         | ✅          |         |              |              |                 |             |
+| mib-map      |         |         | ✅          |         |              |              |                 |             |
+| mib-reduce   |         |         |             | ✅      |              |              |                 |             |
+| randoReduce  | ✅      |         | ✅          | ✅      |              |              |                 |             |
+| randoPureZip |         |         | ✅          | ✅      |              |              |                 |             |
+| events       |         |         | ✅          |         |              |              |                 |             |
+| swapi        |         | ✅      |             | ✅      | ✅           |              |                 |             |
+| linqorne     | ✅      |         | ✅          | ✅      | ✅           |              |                 |             |
+| mylib        |         |         |             |         | ✅           |              |                 |             |
+| immutable    |         |         |             |         |              | ✅           |                 |             |
+| running      | ✅      |         |             | ✅      |              | ✅           | ✅              |             |
+| icequeen     |         |         | ✅          |         |              |              |                 |             |
+| silkroad     |         |         |             |         |              |              |                 | ✅          |
+| puissance    |         |         |             |         |              |              |                 | ✅          |
+| fibo         |         |         |             |         |              |              |                 | ✅          |
+| files        |         |         |             |         |              |              |                 | ✅          |
+| filecount    |         |         |             |         |              |              | ✅              | ✅          |
+| fractale     |         |         |             |         |              |              | ✅              | ✅          |
+| diffit       | ✅      |         | ✅          | ✅      |              |              |                 |             |

@@ -23,13 +23,3 @@ Si une remédiation devait s'avérer nécessaire et justifiée:
 - Elle consiste à répondre à une sélection de quelques questions parmi l'ensemble des "checks théoriques"
 - Elle ne peut compenser qu'un maximum de 20% de la note (donc 1 point)
 
-## Jokers
-Vous recevez trois Jokers en début de module. Ces Jokers peuvent vous être retirés en cours de module sur observation d’un comportement ou d’une pratique inacceptable, tels que : 
-- Du code est commité dans votre repo et vous n’êtes pas en mesure de l’expliquer de manière précise et convaincante. 
-- Abus des libertés qui vous ont données : pause trop longue, discussion extra professionnelles, inactivité, usage non professionnel des outils mis à votre disposition, … 
-- Recours inadapté et répété à l’IA 
-- Comportement dérangeant 
-
-<small>À noter : cette liste n’est pas exhaustive. Il est donc possible qu’un joker vous soit retiré pour une raison qui n’est pas listée ci-dessus. </small>
-
-Le nombre de Jokers qui vous reste en fin de module est un des critères du test pratique de la septième semaine

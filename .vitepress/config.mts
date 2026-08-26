@@ -71,6 +71,11 @@ const filRougesData = existsSync('exos/fil-rouge')
       })
   : []
 
+const supportsNavItems = glob.sync('supports/**/*.md', { posix: true })
+  .filter(f => !f.endsWith('references.md'))
+  .sort()
+  .map(f => ({ text: path.basename(f).replace('.md', ''), link: '/' + f.replace('.md', '') }))
+
 const repoUrl = process.env.GITHUB_REPOSITORY
   ? `https://github.com/${process.env.GITHUB_REPOSITORY}`
   : 'https://github.com/ETML-INF/323-Programmation_fonctionnelle'
@@ -90,7 +95,9 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Thématiques', link: '/thematiques/01-paradigmes-fonctionnels' }
+      { text: 'Thématiques', link: '/thematiques/01-paradigmes-fonctionnels' },
+      { text: 'Supports', items: supportsNavItems },
+      { text: 'Références', link: '/supports/source/references' }
     ],
 
     sidebar: [
@@ -107,9 +114,15 @@ export default defineConfig({
           })
       },
       {
+        text: 'Documentation technique',
+        collapsed: false,
+        items: [{ text: 'Références LINQ', link: '/supports/source/references' }]
+      },
+      {
         text: 'Supports',
         collapsed : true,
         items: glob.sync('supports/**/*.md',{posix:true})
+          .filter(f => !f.endsWith('references.md'))
           .map(f => '/' + f)
           .map((file) => ({ text: `${path.basename(file).replace(".md","")}`, link: `${file}` })).reverse()
       },
@@ -197,5 +210,24 @@ export default defineConfig({
     }
 
     console.log(`\n[fil-rouge] ${filRougesData.length} fil(s) rouge validé(s) : ${filRougesData.map(f => f.id).join(', ')} ✓\n`)
+
+    // Copy standalone PDFs from supports/ (those without a markdown source in supports/source/)
+    // PDFs with a .md counterpart are legacy generated files — skipped (HTML rendering replaces them)
+    const supportsDir = 'supports'
+    if (existsSync(supportsDir)) {
+      const pdfs = readdirSync(supportsDir).filter(f => {
+        if (!f.endsWith('.pdf') || !statSync(`${supportsDir}/${f}`).isFile()) return false
+        const stem = f.replace(/\.pdf$/, '')
+        return !existsSync(`${supportsDir}/source/${stem}.md`)
+      })
+      if (pdfs.length > 0) {
+        const destDir = path.join(siteConfig.outDir, 'supports')
+        mkdirSync(destDir, { recursive: true })
+        for (const f of pdfs) {
+          copyFileSync(`${supportsDir}/${f}`, path.join(destDir, f))
+        }
+        console.log(`\n[supports] ${pdfs.length} PDF(s) autonome(s) copié(s) : ${pdfs.join(', ')} ✓\n`)
+      }
+    }
   }
 })

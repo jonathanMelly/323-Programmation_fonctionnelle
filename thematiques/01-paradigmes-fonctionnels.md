@@ -26,7 +26,7 @@ Ce module introduit la programmation fonctionnelle en C# à travers LINQ. L'idé
 - [Slides paradigmes (Kahoot)](https://create.kahoot.it/share/ict-323-paradigme/ed5b81f2-c5be-4aa4-9e50-acdbbe368c86)
 - [Théorie](../supports/source/01-paradigmes.md)
 - [Généricité — abstraire les types](../supports/source/01b-genericite.md)
-- Découverte de la syntaxe requête LINQ au moyen de la cheatsheet, entre les étapes 1 et 2 de l'exercice pratique
+- Découverte de la syntaxe requête LINQ au moyen de la [cheatsheet](../supports/source/references.md), entre les étapes 1 et 2 de l'exercice pratique
 - [Kahoot 01 paradigmes](https://create.kahoot.it/share/01-paradigmes-de-programmation/0f35b3fc-ffdc-471b-a983-5e121ec76a9d)
 
 ## Activités

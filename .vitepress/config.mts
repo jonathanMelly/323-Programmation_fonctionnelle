@@ -71,6 +71,10 @@ const filRougesData = existsSync('exos/fil-rouge')
       })
   : []
 
+const repoUrl = process.env.GITHUB_REPOSITORY
+  ? `https://github.com/${process.env.GITHUB_REPOSITORY}`
+  : 'https://github.com/ETML-INF/323-Programmation_fonctionnelle'
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "ICT-323 Fun",
@@ -138,7 +142,7 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: '{REPO_URL}' }
+      { icon: 'github', link: repoUrl }
     ],
     search: {
       provider: 'local'

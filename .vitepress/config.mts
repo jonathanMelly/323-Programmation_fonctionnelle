@@ -4,7 +4,7 @@ import path from 'path'
 import { readdirSync, statSync, existsSync, writeFileSync, copyFileSync, mkdirSync, readFileSync } from 'fs'
 import type MarkdownIt from 'markdown-it'
 
-process.env.VITE_EXTRA_EXTENSIONS = 'docx,pdf,csv'
+process.env.VITE_EXTRA_EXTENSIONS = 'docx,pdf,csv,xlsx'
 
 // Transforme les liens vers fil-rouge/*/<ex>/ en composant <FilRougeLink> dynamique.
 // Le markdown reste navigable en dehors de VitePress (lien statique vers le fil rouge par défaut).

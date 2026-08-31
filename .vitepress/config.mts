@@ -3,6 +3,16 @@ import { glob } from 'glob'
 import path from 'path'
 import { readdirSync, statSync, existsSync, writeFileSync, copyFileSync, mkdirSync, readFileSync } from 'fs'
 import type MarkdownIt from 'markdown-it'
+import pkg from '../package.json'
+
+// Fail build when siteBase doesn't match the actual GitHub repo name (CI only)
+if (process.env.GITHUB_REPOSITORY) {
+  const repoName = process.env.GITHUB_REPOSITORY.split('/')[1]
+  const expected = `/${repoName}/`
+  if (pkg.siteBase !== expected) {
+    throw new Error(`[config] siteBase mismatch: package.json="${pkg.siteBase}" vs GITHUB_REPOSITORY implies "${expected}"`)
+  }
+}
 
 process.env.VITE_EXTRA_EXTENSIONS = 'docx,pdf,csv,xlsx'
 
@@ -163,7 +173,7 @@ export default defineConfig({
   },
 
   ignoreDeadLinks: true,
-  base: "/323-Programmation_fonctionnelle/",//for gh pages
+  base: pkg.siteBase,
 
   rewrites: {
     'README.md': 'index.md',

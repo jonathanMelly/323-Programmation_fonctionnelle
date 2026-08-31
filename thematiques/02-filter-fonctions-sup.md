@@ -12,6 +12,7 @@ La programmation fonctionnelle repose sur un concept clé : les fonctions sont d
 
 ## Théorie
 
+- [Slides](../slides/02-filter-hof/)
 - [Synthèse PPT](../supports/source/02-FilterLambdaFctSup.pptx)
 - [Théorie complète Filter](../supports/source/02b-filter.md)
 - [Théorie : fonctions d'ordre supérieur](../supports/source/02a-fonctions-sup.md)

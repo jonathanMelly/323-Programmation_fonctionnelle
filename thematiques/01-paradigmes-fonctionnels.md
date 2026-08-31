@@ -42,7 +42,7 @@ Chaque thématique s'appuie sur **[le fil rouge](../exos/fil-rouge/esport/README
 
 ### Exercices complémentaires
 
-- [Place du marché](../exos/marché) — remise en main du C# et des outils, introduction à LINQ dans un contexte concret
+- [Place du marché](../exos/marché/) — remise en main du C# et des outils, introduction à LINQ dans un contexte concret
 
 - NCDU — créer un programme similaire à [ncdu](https://dev.yorhel.nl/ncdu) affichant les statistiques d'utilisation d'un répertoire Windows :
   - **Version 1** — sans LINQ : boucles et conditions classiques

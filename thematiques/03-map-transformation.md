@@ -33,7 +33,7 @@ Répondre aux besoins du fil rouge en enrichissant la bibliothèque `DataSeries<
 
 #### Activités prioritaires
 
-- [Mib-map](../exos/mib-map) — échauffement Map
+- [Mib-map](../exos/mib-map/) — échauffement Map
 - [Rando](../exos/rando/)
 
 #### Activités libres

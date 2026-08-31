@@ -36,7 +36,7 @@ Répondre aux besoins du fil rouge en enrichissant la bibliothèque `DataSeries<
 
 #### Activités prioritaires
 
-- [Retour sur la place du marché](../exos/marché/enoncé.md) — points clés : import de données (CSV, copier-coller, librairie Excel), relation POO/FP, syntaxe LINQ. [Cheatsheet LINQ](../supports/linq-cheatsheet.pdf) disponible pour référence
+- [Retour sur la place du marché](../exos/marché/) — points clés : import de données (CSV, copier-coller, librairie Excel), relation POO/FP, syntaxe LINQ. [Cheatsheet LINQ](../supports/linq-cheatsheet.pdf) disponible pour référence
 - [Words](../exos/words/)
 
 #### Activités libres

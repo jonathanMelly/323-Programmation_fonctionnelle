@@ -178,47 +178,75 @@ Console.WriteLine(lolValid.AllMatch(m => m.Deaths >= 1));
 
 ## Évaluation paresseuse — observation
 
-`Filter` utilise `Where` qui est **paresseux** : aucune donnée n'est filtrée lors de l'appel.
-L'exécution est reportée à la matérialisation (`Count`, `ToList`, `foreach`...).
+`Where` (LINQ) est **paresseux** : il ne parcourt rien à l'appel, il décrit l'opération.
+Mais `MatchSeries` modifie ce comportement. Deux expériences pour l'observer.
+
+### Expérience 1 — Quand le prédicat s'exécute-t-il ?
 
 ```csharp
-var query = valorant.Filter(m => m.Won);
-// Rien n'est filtré encore — query décrit l'opération
-
-var count = query.Count;
-// Exécution ICI — tous les éléments sont parcourus maintenant
-```
-
-Ajouter un `Console.WriteLine` à l'intérieur du prédicat pour l'observer :
-
-```csharp
-var query = valorant.Filter(m =>
+var filtered = valorant.Filter(m =>
 {
     Console.WriteLine($"Évaluation de {m.Player}");
     return m.Won;
 });
-// Aucune ligne affichée — pas encore exécuté
-
-_ = query.Count; // Maintenant les lignes s'affichent
+Console.WriteLine("--- après Filter ---");
+_ = filtered.Count;
+Console.WriteLine("--- après Count ---");
 ```
 
-Conséquence surprenante de la paresse : la source peut changer **après** la construction de la query.
+**Résultat attendu (intuition LINQ pure) :** les lignes "Évaluation de…" apparaissent après `Count`.
+
+<details>
+<summary>Résultat réel — pourquoi ?</summary>
+
+Les lignes s'affichent **avant** "--- après Filter ---".
+Le constructeur de `MatchSeries` appelle `ToList()` en interne : la matérialisation est immédiate.
+`filtered.Count` n'exécute rien de plus — la série est déjà calculée.
+
+</details>
+
+### Expérience 2 — Mutation de la source après construction
 
 ```csharp
-var source = new List<IMatchData>
-{
-    new ValorantMatch(new DateTime(2024, 1, 1), "Léa", "Jett", 18, 6, 4, 8, 13, true),
-    new ValorantMatch(new DateTime(2024, 1, 2), "Léa", "Reyna", 10, 8, 2, 4, 9, false),
-};
-var query = MatchSeries.From(source).Filter(m => m.Won); // Rien n'est filtré encore
+var source = valorant.ToList();
+var series = MatchSeries.From(source);
+var filtered = series.Filter(m => m.Won);
 
-source.Add(new ValorantMatch(new DateTime(2024, 1, 3), "Léa", "Neon", 22, 5, 6, 12, 13, true));
+int countBefore = filtered.Count;
+source.Clear();
+int countAfter = filtered.Count;
 
-Console.WriteLine(query.Count); // Exécution ICI — le dernier match est inclus !
+Console.WriteLine(countBefore == countAfter); // vrai ou faux ?
 ```
 
-> Demo en classe : construire la query, modifier la source, observer. Surprenant ?
-> L'exercice 07 introduira `.Snapshot()` pour figer une série et éviter ce piège.
+**Résultat attendu (intuition LINQ pure) :** `false` — la série refléterait la source vidée.
+
+<details>
+<summary>Résultat réel — pourquoi ?</summary>
+
+`true` — `filtered` est un **instantané** figé à sa création.
+La mutation de `source` est sans effet sur la série.
+C'est un choix délibéré : l'immuabilité est garantie dès la construction.
+
+</details>
+
+### Comment préserver l'exécution différée ?
+
+<details>
+<summary>Voir</summary>
+
+Stocker `IEnumerable<IMatchData>` au lieu de `List<IMatchData>` en interne suffirait :
+
+```csharp
+// Version paresseuse — chaque accès réévalue le prédicat
+private readonly IEnumerable<IMatchData> _data; // au lieu de List<IMatchData>
+```
+
+Le pipeline resterait lazy mais la série ne serait plus un instantané :
+toute mutation de la source se répercuterait à chaque accès.
+Deux stratégies légitimes selon le contexte.
+
+</details>
 
 ---
 
@@ -280,4 +308,4 @@ composabilité des flags = composabilité du pipeline.
 - `valorant.Count` reste 25 après `Filter` (immuabilité)
 - `RemoveOutliers` sur les données réelles ne retire aucun match (données déjà propres)
 - `RemoveOutliers` sur les données générées (exercice 02) retire quelques matchs impossibles
-- L'observation de la paresse confirme que le prédicat n'est pas appelé avant matérialisation
+- Les deux expériences confirment que `MatchSeries` matérialise immédiatement (snapshot) — contrairement à un pipeline LINQ pur

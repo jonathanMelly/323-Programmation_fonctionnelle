@@ -58,7 +58,7 @@ public TResult Fold<TResult>(TResult seed, Func<TResult, T, TResult> combiner)
 
 ```csharp
 public TResult Fold<TResult>(TResult seed, Func<TResult, T, TResult> combiner)
-    => _data.Aggregate(seed, combiner);
+    => _data.Aggregate(seed, (acc, dp) => combiner(acc, dp.Value));
 ```
 
 </details>
@@ -152,7 +152,7 @@ public class SeriesStats
 
 public SeriesStats Statistics()
 {
-    var values   = _data.Cast<double>().ToList();
+    var values   = _data.Select(dp => dp.Value).ToList();
     var mean     = // ...
     var variance = // ...
     return new SeriesStats(min: /* ... */, max: /* ... */, mean: mean, stdDev: /* ... */);
@@ -165,7 +165,7 @@ public SeriesStats Statistics()
 ```csharp
 public SeriesStats Statistics()
 {
-    var values   = _data.Cast<double>().ToList();
+    var values   = _data.Select(dp => dp.Value).ToList();
     var mean     = values.Aggregate(0.0, (acc, v) => acc + v) / values.Count;
     var variance = values.Aggregate(0.0, (acc, v) => acc + Math.Pow(v - mean, 2)) / values.Count;
     return new SeriesStats(

@@ -57,7 +57,7 @@ public DataSeries<TResult> Transform<TResult>(Func<T, TResult> mapper)
 
 ```csharp
 public DataSeries<TResult> Transform<TResult>(Func<T, TResult> mapper)
-    => DataSeries<TResult>.From(_data.Select(mapper));
+    => DataSeries<TResult>.From(_data.Select(dp => new DataPoint<TResult>(dp.Timestamp, mapper(dp.Value))));
 ```
 
 </details>
@@ -99,12 +99,13 @@ Cas particulier : si `max == min` (toutes les valeurs identiques), retourner 0 p
 ```csharp
 public DataSeries<double> Normalize()
 {
-    var values = _data.Cast<double>().ToList();
+    var points = _data.ToList();
+    var values = points.Select(dp => dp.Value).ToList();
     var min    = // ...
     var max    = // ...
     var range  = // ...
     return DataSeries<double>.From(
-        values.Select(v => /* formule de normalisation */)
+        points.Select(dp => new DataPoint<double>(dp.Timestamp, /* formule de normalisation */))
     );
 }
 ```
@@ -115,12 +116,13 @@ public DataSeries<double> Normalize()
 ```csharp
 public DataSeries<double> Normalize()
 {
-    var values = _data.Cast<double>().ToList();
+    var points = _data.ToList();
+    var values = points.Select(dp => dp.Value).ToList();
     var min    = values.Min();
     var max    = values.Max();
     var range  = max - min;
     return DataSeries<double>.From(
-        values.Select(v => range == 0 ? 0.0 : (v - min) / range)
+        points.Select(dp => new DataPoint<double>(dp.Timestamp, range == 0 ? 0.0 : (dp.Value - min) / range))
     );
 }
 ```
@@ -156,12 +158,14 @@ La variable `windowSize` capturée par le lambda est une **closure** — observe
 ```csharp
 public DataSeries<double> Smooth(int windowSize)
 {
-    var values = _data.Cast<double>().ToList();
+    var points = _data.ToList();
+    var values = points.Select(dp => dp.Value).ToList();
     return DataSeries<double>.From(
         Enumerable.Range(0, values.Count)
             .Select(i =>
             {
                 // extraire la fenêtre autour de i et calculer la moyenne
+                // retourner new DataPoint<double>(points[i].Timestamp, ...)
                 // ...
             })
     );
@@ -174,13 +178,14 @@ public DataSeries<double> Smooth(int windowSize)
 ```csharp
 public DataSeries<double> Smooth(int windowSize)
 {
-    var values = _data.Cast<double>().ToList();
+    var points = _data.ToList();
+    var values = points.Select(dp => dp.Value).ToList();
     return DataSeries<double>.From(
         Enumerable.Range(0, values.Count)
             .Select(i =>
             {
                 var window = values.Skip(Math.Max(0, i - windowSize + 1)).Take(windowSize);
-                return window.Average();
+                return new DataPoint<double>(points[i].Timestamp, window.Average());
             })
     );
 }

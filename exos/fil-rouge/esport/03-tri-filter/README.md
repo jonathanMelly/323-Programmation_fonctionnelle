@@ -43,7 +43,7 @@ public DataSeries<T> Filter(Func<T, bool> predicate)
 
 ```csharp
 public DataSeries<T> Filter(Func<T, bool> predicate)
-    => new DataSeries<T>(_data.Where(predicate));
+    => DataSeries<T>.From(_data.Where(dp => predicate(dp.Value)));
 ```
 
 </details>
@@ -155,10 +155,10 @@ public bool AllMatch(Func<T, bool> predicate) => // ...
 
 ```csharp
 public bool HasAny(Func<T, bool> predicate)
-    => _data.Any(predicate);
+    => _data.Any(dp => predicate(dp.Value));
 
 public bool AllMatch(Func<T, bool> predicate)
-    => _data.All(predicate);
+    => _data.All(dp => predicate(dp.Value));
 ```
 
 </details>
@@ -236,11 +236,11 @@ C'est un choix délibéré : l'immuabilité est garantie dès la construction.
 <details>
 <summary>Voir</summary>
 
-Stocker `IEnumerable<T>` au lieu de `List<T>` en interne suffirait :
+Stocker `IEnumerable<DataPoint<T>>` au lieu de `List<DataPoint<T>>` en interne suffirait :
 
 ```csharp
 // Version paresseuse — chaque accès réévalue le prédicat
-private readonly IEnumerable<T> _data; // au lieu de List<T>
+private readonly IEnumerable<DataPoint<T>> _data; // au lieu de List<DataPoint<T>>
 ```
 
 Le pipeline resterait lazy mais la série ne serait plus un instantané :

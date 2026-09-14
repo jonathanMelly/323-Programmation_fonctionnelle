@@ -33,13 +33,13 @@ Répondre aux besoins du fil rouge en enrichissant la bibliothèque `DataSeries<
 
 #### Activités prioritaires
 
-- [Mib-map → Livrable 2](../exos/mib-map/README.md#livrable-2)
-- [Rando](../exos/rando/)
-- [Icequeen](../exos/icequeen/README.md)
+- [Mib-map → Livrable 2](../exos/mib-map/#livrable-2)
+- [Rando](../exos/rando)
+- [Icequeen](../exos/icequeen)
 
 #### Activités libres
 
-- [Mib-map : Mesures de performances](../exos/mib-map/README.md#mesures-de-performances)
+- [Mib-map : Mesures de performances](../exos/mib-map/#mesures-de-performances)
 - Intégrer Map au projet PTL
-- [La revanche du marché (Reduce)](../exos/mib-reduce/README.md)
-- [Le retour de Rando (Reduce)](../exos/randoReduce/README.md)
+- [La revanche du marché (Reduce)](../exos/mib-reduce)
+- [Le retour de Rando (Reduce)](../exos/randoReduce)

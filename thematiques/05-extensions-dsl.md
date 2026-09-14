@@ -31,10 +31,10 @@ Répondre aux besoins du fil rouge en enrichissant la bibliothèque `DataSeries<
 
 #### Activités prioritaires
 
-- [Terminer RandoReduce](../exos/randoReduce/README.md)
-- [Gérer des événements avec Zip](../exos/events/README.md)
+- [Terminer RandoReduce](../exos/randoReduce)
+- [Gérer des événements avec Zip](../exos/events)
 
 #### Activités libres
 
-- SWAPI — exercice de consolidation Filter/Map/Reduce avec extensions. [La Cheatsheet](../supports/linq-cheatsheet.pdf) peut être utile. ![Yoda](yoda.png) [SWAPI](../exos/swapi/)
+- SWAPI — exercice de consolidation Filter/Map/Reduce avec extensions. [La Cheatsheet](../supports/linq-cheatsheet.pdf) peut être utile. ![Yoda](yoda.png) [SWAPI](../exos/swapi)
 - Avancer sur le projet PTL

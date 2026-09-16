@@ -28,7 +28,11 @@ kdaLea
 
 **Avant de coder :**
 
-- Pourquoi des méthodes d'*extension* plutôt que des méthodes dans la classe `DataSeries<T>` ?
+- `Normalize()` et `Smooth()` (exercice 04) étaient des fonctions `static` isolées dans un
+  utilitaire provisoire `MathHelpers`, appelées explicitement (`MathHelpers.Normalize(series)`)
+  faute de mécanisme pour les rattacher à `DataSeries<double>`. Quel mot-clé C# permet
+  d'ajouter une méthode à un type existant sans modifier sa classe — et pourquoi
+  `DataSeries<T>` (générique) en a besoin plutôt que d'écrire des méthodes d'instance ?
 - Quel contrat chaque méthode doit-elle respecter pour que le chaînage reste possible ?
 
 <details>
@@ -44,7 +48,12 @@ Le contrat de la composition : chaque méthode retourne le même type qu'elle re
 
 ## Étape 1 — `ToCsv()` dans `DataSeriesExtensions.cs`
 
-Créer `DataSeries/DataSeriesExtensions.cs` :
+Renommer le fichier provisoire de l'exercice 04 (`DataSeries/MathHelpers.cs`) en
+`DataSeries/DataSeriesExtensions.cs`, et sa classe `MathHelpers` en `DataSeriesExtensions`.
+Ajouter le mot-clé `this` devant le premier paramètre de `Normalize` et de `Smooth` — elles
+deviennent enfin de vraies méthodes d'extension, appelables en `series.Normalize()` et
+`series.Smooth(windowSize)` plutôt que via `MathHelpers.Normalize(series)`. Ajouter `ToCsv`
+à côté, directement comme méthode d'extension :
 
 ```csharp
 public static class DataSeriesExtensions

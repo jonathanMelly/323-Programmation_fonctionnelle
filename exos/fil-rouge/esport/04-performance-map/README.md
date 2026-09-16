@@ -1,6 +1,6 @@
 # Exercice 04 — Calculer le KDA par joueur
 
-> Partie 3 — `.Transform()` + `.Normalize()` + `.Smooth()`
+> Partie 3 — `.Transform()` + `Normalize()` + `Smooth()` (hors `DataSeries<T>`, temporaire)
 
 ## Concepts théoriques
 
@@ -83,7 +83,18 @@ Reproduire pour CS2 (Raphaël, Kiara) et LoL (Noé).
 
 ---
 
-## Étape 2 — `.Normalize()` — comparer entre jeux
+## Étape 2 — `Normalize()` — comparer entre jeux
+
+> **Simplification temporaire — on sort volontairement de `DataSeries<T>`.**
+> `Normalize` a besoin de calculer `max - min`, une soustraction qui n'a de sens que pour
+> `double`. Or `DataSeries<T>` reste générique sur `T` (il sert aussi pour `ValorantMatch`,
+> `Cs2Match`...), donc une méthode d'instance `Normalize()` dans cette classe ne compilerait
+> pas pour tous les `T`. La vraie solution — une méthode d'extension qui ajoute `Normalize`
+> uniquement à `DataSeries<double>` — demande une notion pas encore vue (exercice 06).
+> En attendant, `Normalize` **n'est pas une méthode de `DataSeries<T>`** : c'est une fonction
+> `static` isolée dans un utilitaire à part (`DataSeries/MathHelpers.cs`), appelée explicitement
+> — `MathHelpers.Normalize(series)` et non `series.Normalize()`. C'est une étape intermédiaire
+> assumée, pas la version définitive de la bibliothèque.
 
 **Avant de coder :** que signifie normaliser une série entre 0 et 1 ?
 Quelle formule permet de ramener n'importe quelle valeur dans `[0, 1]` ?
@@ -97,16 +108,19 @@ Cas particulier : si `max == min` (toutes les valeurs identiques), retourner 0 p
 </details>
 
 ```csharp
-public DataSeries<double> Normalize()
+public static class MathHelpers
 {
-    var points = _data.ToList();
-    var values = points.Select(dp => dp.Value).ToList();
-    var min    = // ...
-    var max    = // ...
-    var range  = // ...
-    return DataSeries<double>.From(
-        points.Select(dp => new DataPoint<double>(dp.Timestamp, /* formule de normalisation */))
-    );
+    public static DataSeries<double> Normalize(DataSeries<double> series)
+    {
+        var points = series.DataPoints.ToList();
+        var values = points.Select(dp => dp.Value).ToList();
+        var min    = // ...
+        var max    = // ...
+        var range  = // ...
+        return DataSeries<double>.From(
+            points.Select(dp => new DataPoint<double>(dp.Timestamp, /* formule de normalisation */))
+        );
+    }
 }
 ```
 
@@ -114,16 +128,19 @@ public DataSeries<double> Normalize()
 <summary>Voir la solution</summary>
 
 ```csharp
-public DataSeries<double> Normalize()
+public static class MathHelpers
 {
-    var points = _data.ToList();
-    var values = points.Select(dp => dp.Value).ToList();
-    var min    = values.Min();
-    var max    = values.Max();
-    var range  = max - min;
-    return DataSeries<double>.From(
-        points.Select(dp => new DataPoint<double>(dp.Timestamp, range == 0 ? 0.0 : (dp.Value - min) / range))
-    );
+    public static DataSeries<double> Normalize(DataSeries<double> series)
+    {
+        var points = series.DataPoints.ToList();
+        var values = points.Select(dp => dp.Value).ToList();
+        var min    = values.Min();
+        var max    = values.Max();
+        var range  = max - min;
+        return DataSeries<double>.From(
+            points.Select(dp => new DataPoint<double>(dp.Timestamp, range == 0 ? 0.0 : (dp.Value - min) / range))
+        );
+    }
 }
 ```
 
@@ -132,9 +149,9 @@ public DataSeries<double> Normalize()
 Comparer les KDA normalisés :
 
 ```csharp
-var kdaLeaNorm     = kdaLea.Normalize();
-var kdaRaphaelNorm = kdaRaphael.Normalize();
-var kdaNoeNorm     = kdaNoe.Normalize();
+var kdaLeaNorm     = MathHelpers.Normalize(kdaLea);
+var kdaRaphaelNorm = MathHelpers.Normalize(kdaRaphael);
+var kdaNoeNorm     = MathHelpers.Normalize(kdaNoe);
 // Toutes les valeurs sont maintenant dans [0, 1]
 ```
 
@@ -155,20 +172,27 @@ La variable `windowSize` capturée par le lambda est une **closure** — observe
 
 </details>
 
+> Même simplification temporaire qu'à l'étape 2 : `Smooth` sort elle aussi de `DataSeries<T>`
+> et rejoint `MathHelpers`, appelée explicitement (`MathHelpers.Smooth(series, windowSize)`
+> plutôt que `series.Smooth(windowSize)`), avec `series` à la place de `_data`.
+
 ```csharp
-public DataSeries<double> Smooth(int windowSize)
+public static class MathHelpers // suite de l'étape 2
 {
-    var points = _data.ToList();
-    var values = points.Select(dp => dp.Value).ToList();
-    return DataSeries<double>.From(
-        Enumerable.Range(0, values.Count)
-            .Select(i =>
-            {
-                // extraire la fenêtre autour de i et calculer la moyenne
-                // retourner new DataPoint<double>(points[i].Timestamp, ...)
-                // ...
-            })
-    );
+    public static DataSeries<double> Smooth(DataSeries<double> series, int windowSize)
+    {
+        var points = series.DataPoints.ToList();
+        var values = points.Select(dp => dp.Value).ToList();
+        return DataSeries<double>.From(
+            Enumerable.Range(0, values.Count)
+                .Select(i =>
+                {
+                    // extraire la fenêtre autour de i et calculer la moyenne
+                    // retourner new DataPoint<double>(points[i].Timestamp, ...)
+                    // ...
+                })
+        );
+    }
 }
 ```
 
@@ -176,18 +200,21 @@ public DataSeries<double> Smooth(int windowSize)
 <summary>Voir la solution</summary>
 
 ```csharp
-public DataSeries<double> Smooth(int windowSize)
+public static class MathHelpers // suite de l'étape 2
 {
-    var points = _data.ToList();
-    var values = points.Select(dp => dp.Value).ToList();
-    return DataSeries<double>.From(
-        Enumerable.Range(0, values.Count)
-            .Select(i =>
-            {
-                var window = values.Skip(Math.Max(0, i - windowSize + 1)).Take(windowSize);
-                return new DataPoint<double>(points[i].Timestamp, window.Average());
-            })
-    );
+    public static DataSeries<double> Smooth(DataSeries<double> series, int windowSize)
+    {
+        var points = series.DataPoints.ToList();
+        var values = points.Select(dp => dp.Value).ToList();
+        return DataSeries<double>.From(
+            Enumerable.Range(0, values.Count)
+                .Select(i =>
+                {
+                    var window = values.Skip(Math.Max(0, i - windowSize + 1)).Take(windowSize);
+                    return new DataPoint<double>(points[i].Timestamp, window.Average());
+                })
+        );
+    }
 }
 ```
 
@@ -197,7 +224,7 @@ Observer la closure :
 
 ```csharp
 int window = 3;
-var smoothed = kdaLea.Smooth(window);
+var smoothed = MathHelpers.Smooth(kdaLea, window);
 window = 10; // Sans effet — window a été copiée à l'appel de Smooth (passage d'argument)
 ```
 

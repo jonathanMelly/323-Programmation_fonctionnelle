@@ -137,9 +137,24 @@ foreach (var avg in progression)
 > `Statistics` calcule une moyenne et un écart-type — `acc + v`, `v - mean` — des opérations qui
 > n'ont de sens que pour `double`. `DataSeries<T>` reste générique, donc cette méthode ne peut
 > pas être une méthode d'instance de `DataSeries<T>` (le compilateur la refuserait pour
-> `DataSeries<ValorantMatch>`, par exemple). `Statistics` rejoint `Normalize` et `Smooth` dans
-> l'utilitaire `DataSeries/MathHelpers.cs`, appelée explicitement — `MathHelpers.Statistics(series)`
+> `DataSeries<ValorantMatch>`, par exemple). `Statistics` rejoint
+> [`Normalize`](../04-performance-map/README.md#etape-2-—-normalize-—-comparer-entre-jeux) et `Smooth`
+> dans l'utilitaire `DataSeries/MathHelpers.cs`, appelée explicitement — `MathHelpers.Statistics(series)`
 > plutôt que `series.Statistics()`. Les trois seront promues méthodes d'extension à l'exercice 06.
+
+**Rappel — `Normalize()` en un coup d'œil** (formule : `(valeur - min) / (max - min)`) :
+
+| Match | KDA brut | KDA normalisé |
+|---|---|---|
+| 1 | 1.2 | 0.00 |
+| 2 | 1.8 | 0.25 |
+| 3 | 3.6 | 1.00 |
+| 4 | 2.4 | 0.50 |
+
+Sur cette série, `min = 1.2` et `max = 3.6` : le minimum devient `0`, le maximum devient `1`,
+et les autres valeurs se placent proportionnellement entre les deux. Chaque série est normalisée
+indépendamment — c'est ce qui permet de comparer Raphaël (CS2) et Léa (Valorant) malgré des
+échelles de KDA brutes différentes. Détails : [Normalize — exercice 04](../04-performance-map/README.md#etape-2-—-normalize-—-comparer-entre-jeux).
 
 ```csharp
 public class SeriesStats

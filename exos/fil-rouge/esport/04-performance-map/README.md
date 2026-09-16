@@ -107,6 +107,19 @@ Cas particulier : si `max == min` (toutes les valeurs identiques), retourner 0 p
 
 </details>
 
+**Exemple** sur une série de 4 KDA bruts :
+
+| Match | KDA brut | KDA normalisé |
+|---|---|---|
+| 1 | 1.2 | 0.00 |
+| 2 | 1.8 | 0.25 |
+| 3 | 3.6 | 1.00 |
+| 4 | 2.4 | 0.50 |
+
+`min = 1.2`, `max = 3.6` : `(1.8 - 1.2) / (3.6 - 1.2) = 0.25`. Chaque série est normalisée
+indépendamment, ce qui permet ensuite de comparer des joueurs sur des jeux différents (KDA Valorant
+vs KDA CS2) malgré des échelles brutes différentes.
+
 ```csharp
 public static class MathHelpers
 {

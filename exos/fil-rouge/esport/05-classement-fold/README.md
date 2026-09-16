@@ -1,6 +1,6 @@
 # Exercice 05 — Classement de saison
 
-> Partie 4 — `.Fold()` + `.Statistics()` + `.SlidingWindow()`
+> Partie 4 — `.Fold()` + `Statistics()` (hors `DataSeries<T>`, temporaire) + `.SlidingWindow()`
 
 ## Concepts théoriques
 
@@ -131,7 +131,15 @@ foreach (var avg in progression)
 
 ---
 
-## Étape 3 — `.Statistics()` — qui est le plus régulier ?
+## Étape 3 — `Statistics()` — qui est le plus régulier ?
+
+> **Simplification temporaire — on sort volontairement de `DataSeries<T>`, comme en exercice 04.**
+> `Statistics` calcule une moyenne et un écart-type — `acc + v`, `v - mean` — des opérations qui
+> n'ont de sens que pour `double`. `DataSeries<T>` reste générique, donc cette méthode ne peut
+> pas être une méthode d'instance de `DataSeries<T>` (le compilateur la refuserait pour
+> `DataSeries<ValorantMatch>`, par exemple). `Statistics` rejoint `Normalize` et `Smooth` dans
+> l'utilitaire `DataSeries/MathHelpers.cs`, appelée explicitement — `MathHelpers.Statistics(series)`
+> plutôt que `series.Statistics()`. Les trois seront promues méthodes d'extension à l'exercice 06.
 
 ```csharp
 public class SeriesStats
@@ -150,12 +158,15 @@ public class SeriesStats
     }
 }
 
-public SeriesStats Statistics()
+public static class MathHelpers // suite (Normalize, Smooth — exercice 04)
 {
-    var values   = _data.Select(dp => dp.Value).ToList();
-    var mean     = // ...
-    var variance = // ...
-    return new SeriesStats(min: /* ... */, max: /* ... */, mean: mean, stdDev: /* ... */);
+    public static SeriesStats Statistics(DataSeries<double> series)
+    {
+        var values   = series.Values.ToList();
+        var mean     = // ...
+        var variance = // ...
+        return new SeriesStats(min: /* ... */, max: /* ... */, mean: mean, stdDev: /* ... */);
+    }
 }
 ```
 
@@ -163,17 +174,20 @@ public SeriesStats Statistics()
 <summary>Voir la solution</summary>
 
 ```csharp
-public SeriesStats Statistics()
+public static class MathHelpers // suite (Normalize, Smooth — exercice 04)
 {
-    var values   = _data.Select(dp => dp.Value).ToList();
-    var mean     = values.Aggregate(0.0, (acc, v) => acc + v) / values.Count;
-    var variance = values.Aggregate(0.0, (acc, v) => acc + Math.Pow(v - mean, 2)) / values.Count;
-    return new SeriesStats(
-        min:    values.Min(),
-        max:    values.Max(),
-        mean:   mean,
-        stdDev: Math.Sqrt(variance)
-    );
+    public static SeriesStats Statistics(DataSeries<double> series)
+    {
+        var values   = series.Values.ToList();
+        var mean     = values.Aggregate(0.0, (acc, v) => acc + v) / values.Count;
+        var variance = values.Aggregate(0.0, (acc, v) => acc + Math.Pow(v - mean, 2)) / values.Count;
+        return new SeriesStats(
+            min:    values.Min(),
+            max:    values.Max(),
+            mean:   mean,
+            stdDev: Math.Sqrt(variance)
+        );
+    }
 }
 ```
 
@@ -182,8 +196,8 @@ public SeriesStats Statistics()
 Comparer les profils — un écart-type faible = joueur régulier :
 
 ```csharp
-var statsLea     = kdaLea.Statistics();
-var statsRaphael = kdaRaphael.Statistics();
+var statsLea     = MathHelpers.Statistics(kdaLea);
+var statsRaphael = MathHelpers.Statistics(kdaRaphael);
 Console.WriteLine($"Léa     — KDA moy : {statsLea.Mean:F2}, écart-type : {statsLea.StdDev:F2}");
 Console.WriteLine($"Raphaël — KDA moy : {statsRaphael.Mean:F2}, écart-type : {statsRaphael.StdDev:F2}");
 ```
@@ -267,5 +281,5 @@ partition — un `Fold` par clé.
 
 - `Fold` sur liste vide retourne `seed`
 - `SlidingWindow(5)` sur 13 matchs produit 9 fenêtres (13 - 5 + 1 = 9)
-- `Statistics().Mean` correspond à `Fold(0.0, (acc,v)=>acc+v) / Count`
+- `MathHelpers.Statistics(series).Mean` correspond à `series.Fold(0.0, (acc,v)=>acc+v) / series.Count`
 - Les écarts-types permettent de distinguer les profils réguliers des profils variables

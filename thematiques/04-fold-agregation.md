@@ -10,7 +10,7 @@ Filter et Map traitent chaque élément indépendamment. Fold (alias `Aggregate`
 
 ## Théorie
 
-- [Slides](../slides/04-fold/)
+- [Slides](../slides/04-fold/){target="_self"}
 - [04-Reduce](../supports/source/04-Reduce.md)
 - [PPT Reduce](../supports/source/03-Reduce.pptx)
 - [Références techniques LINQ](../supports/source/references.md) — cheatsheet et documentation officielle

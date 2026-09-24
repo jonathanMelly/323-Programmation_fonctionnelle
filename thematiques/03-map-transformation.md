@@ -10,7 +10,7 @@ Après avoir filtré des collections, l'étape naturelle est de les transformer.
 
 ## Théorie
 
-- [Slides](../slides/03-map/)
+- [Slides](../slides/03-map/){target="_self"}
 - [Exemple introductif](../supports/source/03-MapIntro.md)
 - [Condensé PPT](../supports/source/03-Map.pptx)
 - [Théorie complète](../supports/source/03-Map.md)

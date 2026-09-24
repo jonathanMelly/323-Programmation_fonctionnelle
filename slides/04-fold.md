@@ -5,6 +5,7 @@ info: "Reduce, Aggregate, GroupBy, Fold universel"
 author: ETML
 transition: slide-left
 mdc: true
+routerMode: hash
 ---
 
 # Fold / Aggregate

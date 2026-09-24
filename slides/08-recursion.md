@@ -5,6 +5,7 @@ info: "Récursion, cas de base, schéma, Fold vs récursion, TCO"
 author: ETML
 transition: slide-left
 mdc: true
+routerMode: hash
 ---
 
 # Récursivité

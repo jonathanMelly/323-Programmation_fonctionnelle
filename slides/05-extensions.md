@@ -5,6 +5,7 @@ info: "Méthodes d'extension, chaînage, DSL, Zip, composition de fonctions"
 author: ETML
 transition: slide-left
 mdc: true
+routerMode: hash
 ---
 
 # Extensions & DSL

@@ -5,6 +5,7 @@ info: "Impératif vs déclaratif, LINQ, généricité et DataSeries<T>"
 author: ETML
 transition: slide-left
 mdc: true
+routerMode: hash
 ---
 
 # Paradigmes de programmation

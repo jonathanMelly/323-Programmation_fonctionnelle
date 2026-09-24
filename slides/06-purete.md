@@ -5,6 +5,7 @@ info: "Fonctions pures, transparence référentielle, immutabilité, records C#"
 author: ETML
 transition: slide-left
 mdc: true
+routerMode: hash
 ---
 
 # Pureté & Immutabilité

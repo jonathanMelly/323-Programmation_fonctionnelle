@@ -5,6 +5,7 @@ info: "Select, projection, tuple, SelectMany, composition de pipelines"
 author: ETML
 transition: slide-left
 mdc: true
+routerMode: hash
 ---
 
 # Map / Select

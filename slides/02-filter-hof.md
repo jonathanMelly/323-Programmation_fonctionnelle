@@ -5,6 +5,7 @@ info: "Action, Func, lambdas, captures, Where, évaluation paresseuse"
 author: ETML
 transition: slide-left
 mdc: true
+routerMode: hash
 ---
 
 # Fonctions d'ordre supérieur & Filter

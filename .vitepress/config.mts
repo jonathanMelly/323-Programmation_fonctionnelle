@@ -25,10 +25,17 @@ function exoLinksPlugin(md: MarkdownIt) {
       if (blockToken.type !== 'inline' || !blockToken.children) continue
       for (const token of blockToken.children) {
         if (token.type !== 'link_open') continue
-        const href = token.attrGet('href') ?? ''
+        let href = token.attrGet('href') ?? ''
+        // exos/<x>/README.md (ou .html déjà normalisé par VitePress) → forme trailing-slash,
+        // pour que les deux écritures donnent le même lien (le .md est pratique dans les éditeurs)
+        const readme = href.match(/^(.*exos\/(?!fil-rouge)[^/]+\/)README\.(?:md|html)$/)
+        if (readme) {
+          href = readme[1]
+          token.attrSet('href', href)
+        }
         // trailing-slash exo links (non fil-rouge) → ajoute README.md pour que VitePress traite le lien avec base
         if (/exos\/(?!fil-rouge)[^/]+\/$/.test(href)) {
-          token.attrSet('href', href + 'README.md')
+          token.attrSet('href', href + 'index.md')
         }
         // relative trailing-slash links inside fil-rouge pages (e.g. esport/README.md → 01-equipe-genericite/)
         else if (inFilRouge && /^[^/]+\/$/.test(href)) {

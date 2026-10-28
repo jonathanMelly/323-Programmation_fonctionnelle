@@ -20,9 +20,7 @@ routerMode: hash
 
 ---
 
-# Calculer la taille d'un répertoire.
-# Facile — sauf qu'il contient des sous-répertoires,
-# qui contiennent eux-mêmes des sous-répertoires…
+# Taille d'un répertoire : des sous-répertoires dans des sous-répertoires…
 
 <v-clicks>
 
@@ -36,7 +34,7 @@ routerMode: hash
 ```
 
 ```csharp
-// La structure se répète à chaque niveau — même problème, plus petit
+// Même problème, plus petit, à chaque niveau
 long Size(Directory dir)
 {
     if (dir.IsEmpty) return 0;                         // cas trivial
@@ -46,7 +44,7 @@ long Size(Directory dir)
 // Size(projet/) → 8 ko
 ```
 
-<div class="mt-4 p-3 bg-blue-700 rounded text-blue-300">
+<div class="mt-1 p-1 bg-blue-700 rounded text-blue-300">
 
 Quand la **structure du problème se répète**, la récursion s'impose naturellement.
 
@@ -157,7 +155,7 @@ layout: section
 
 <v-clicks>
 
-```csharp {1-8}
+```csharp
 // Version itérative — compteur mutable
 int Factorial(int x)
 {
@@ -168,7 +166,7 @@ int Factorial(int x)
 // Factorial(6) → 720
 ```
 
-```csharp {1-7}
+```csharp {1-3|4|5|all}
 // Version récursive — aucune variable mutable
 int Factorial(int x)
 {

@@ -1,4 +1,11 @@
-# Idéou pour la prochaine mouture
+# Idées pour 2027
+- XCL: commencer par les extensions 
+On pourrait leur faire écrire - par exemple - string[] Where(string[] haystack, string needle), le transformer en string[].Where(string needle), puis en string[].Where(Func<string, bool> predicate)
+
+- JMY: ajouter des drills hors fil rouge
+- JMY: revoir le fil rouge (moins de bruit...)
+
+# Idéou pour la prochaine mouture 26
 - Traiter SelectMany et Concat
  - SelectMany : plusieurs champs (évite une posttransformation)
  - Concat : fait des OR dans l’ordre donné...
